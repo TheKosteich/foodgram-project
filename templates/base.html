@@ -35,7 +35,7 @@
             </div>
             <div class="card-list">
                 <div class="card" data-id="120">
-                    <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+                    <a href="#" class="link" target="_blank"><img src={% static 'images/testCardImg.png' %} alt="Какой-то текст" class="card__image"></a>
                     <div class="card__body">
                         <a class="card__title link" href="#" target="_blank">Французские тосты</a>
                         <ul class="card__items">
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="card" data-id="121">
-                    <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+                    <a href="#" class="link" target="_blank"><img src={% static 'images/testCardImg.png' %} alt="Какой-то текст" class="card__image"></a>
                     <div class="card__body">
                         <a class="card__title link" href="#" target="_blank">Французские тосты</a>
                         <ul class="card__items">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="card" data-id="122">
-                    <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+                    <a href="#" class="link" target="_blank"><img src={% static 'images/testCardImg.png' %} alt="Какой-то текст" class="card__image"></a>
                     <div class="card__body">
                         <a class="card__title link" href="#" target="_blank">Французские тосты</a>
                         <ul class="card__items">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="card" data-id="123">
-                    <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+                    <a href="#" class="link" target="_blank"><img src={% static 'images/testCardImg.png' %} alt="Какой-то текст" class="card__image"></a>
                     <div class="card__body">
                         <a class="card__title link" href="#" target="_blank">Французские тосты</a>
                         <ul class="card__items">
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="card" data-id="124">
-                    <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+                    <a href="#" class="link" target="_blank"><img src={% static 'images/testCardImg.png' %} alt="Какой-то текст" class="card__image"></a>
                     <div class="card__body">
                         <a class="card__title link" href="#" target="_blank">Французские тосты</a>
                         <ul class="card__items">
@@ -125,10 +125,19 @@
                     </div>
                 </div>
             </div>
+
+            <!--
+            {% comment 'TODO: make templete logic after view' %}
+            {% if page.has_other_pages %}
+                {% include "paginator.html" with items=page paginator=paginator %}
+            {% endif %}
+            {% endcomment %}
+            -->
+
             <nav class="pagination" aria-label="Search results pages">
                 <ul class="pagination__container">
                     <li class="pagination__item"><a class="pagination__link link" href="#"><span class="icon-left"></span></a></li>
-                    <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="#">1</a></li>
+                    <li class="pagination__item pagination__item_active"><span class="pagination__link link" >1</span></li>
                     <li class="pagination__item"><a class="pagination__link link" href="#">2</a></li>
                     <li class="pagination__item"><a class="pagination__link link" href="#">3</a></li>
                     <li class="pagination__item"><a class="pagination__link link" href="#">4</a></li>
