@@ -19,16 +19,9 @@
       {% block content %}
       {% endblock %}
 
-
-      <!--
-      {% comment 'TODO: make templete logic after view' %}
-        {% if page.has_other_pages %}
-          {% include "paginator.html" with items=page paginator=paginator %}
-        {% endif %}
-      {% endcomment %}
-      -->
-
-      {% include "paginator.html" %}
+      {% if page.has_other_pages %}
+        {% include "paginator.html" with items=page paginator=paginator %}
+      {% endif %}
     </main>
 
     {% include 'footer.html' %}

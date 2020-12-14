@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.translation import gettext_lazy
 
 User = get_user_model()
 
@@ -26,7 +27,9 @@ class Recipe(models.Model):
     description = models.TextField()
     ingredients = models.ManyToManyField(Ingredient,
                                          through='RecipeIngredients')
-    tag = models.CharField(max_length=10)
+    is_breakfast = models.BooleanField(default=False)
+    is_lunch = models.BooleanField(default=False)
+    is_dinner = models.BooleanField(default=False)
     cooking_time = models.IntegerField()
     slug = models.SlugField()
 

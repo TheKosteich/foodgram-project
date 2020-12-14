@@ -23,6 +23,10 @@
     </ul>
   </div>
   <div class="card-list">
-    {% include "recipes/recipe.html" %}
+
+    {% for recipe in page %}
+      {% include "recipes/recipe.html" with recipe=recipe %}
+    {% endfor %}
+
   </div>
 {% endblock %}

@@ -1,8 +1,15 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
+from recipes.models import Recipe
 
-def recipes(request):
-    return render(request, 'recipes/recipes.html')
+
+def get_recipes(request):
+    recipes = Recipe.objects.all()
+    context = {'paginator': Paginator(recipes, 9)}
+    page_number = request.GET.get('page')
+    context['page'] = context['paginator'].get_page(page_number)
+    return render(request, 'recipes/recipes.html', context=context)
 
 
 # service functions described below
