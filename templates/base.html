@@ -10,6 +10,9 @@
         {% block title %}Page title{% endblock %}
       </title>
     <link rel="stylesheet" href={% static 'pages/index.css' %}>
+
+    {% block styles %}{% endblock %}
+
   </head>
   <body class="body">
 
@@ -26,6 +29,7 @@
 
     {% include 'footer.html' %}
 
+
     <script src={% static 'js/components/MainCards.js' %}></script>
     <script src={% static 'js/components/Purchases.js' %}></script>
     <script src={% static 'js/config/config.js' %}></script>
@@ -33,5 +37,6 @@
     <script src={% static 'js/components/Header.js' %}></script>
     <script src={% static 'js/api/Api.js' %}></script>
     <script src={% static 'js/indexNotAuth.js' %}></script>
+    {% block scripts %}{% endblock%}
   </body>
 </html>

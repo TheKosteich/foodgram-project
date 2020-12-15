@@ -13,15 +13,19 @@ def get_recipes(request):
 
 
 def get_follows(request):
-    pass
+    return render(request, 'recipes/follows.html')
 
 
 def create_recipe(request):
-    pass
+    return render(request, 'recipes/new_recipe.html')
 
 
 def get_shop_list(request):
-    pass
+    return render(request, 'recipes/shop_list.html')
+
+
+def get_favorites(request):
+    return render(request, 'recipes/favorites.html')
 
 
 # service functions described below

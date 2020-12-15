@@ -13,6 +13,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', get_recipes, name='index'),
     path('recipes/', include('recipes.urls')),
+    path('users/', include('users.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
 ]
 
 # Django urls setting for development
