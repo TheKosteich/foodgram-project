@@ -12,6 +12,18 @@ def get_recipes(request):
     return render(request, 'recipes/recipes.html', context=context)
 
 
+def get_follows(request):
+    pass
+
+
+def create_recipe(request):
+    pass
+
+
+def get_shop_list(request):
+    pass
+
+
 # service functions described below
 def page_not_found(request, exception):
     context = {'path': request.path}
