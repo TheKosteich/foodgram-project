@@ -23,12 +23,11 @@
       {% endblock %}
 
       {% if page.has_other_pages %}
-        {% include "paginator.html" with items=page paginator=paginator %}
+        {% include "paginator.html" with page=page paginator=paginator %}
       {% endif %}
     </main>
 
     {% include 'footer.html' %}
-
 
     <script src={% static 'js/components/MainCards.js' %}></script>
     <script src={% static 'js/components/Purchases.js' %}></script>
@@ -37,6 +36,8 @@
     <script src={% static 'js/components/Header.js' %}></script>
     <script src={% static 'js/api/Api.js' %}></script>
     <script src={% static 'js/indexNotAuth.js' %}></script>
+
     {% block scripts %}{% endblock%}
+
   </body>
 </html>

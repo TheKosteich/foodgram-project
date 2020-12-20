@@ -5,7 +5,7 @@ from recipes.models import Recipe
 
 
 def get_recipes(request):
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.select_related('author',)
     context = {'paginator': Paginator(recipes, 9)}
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
