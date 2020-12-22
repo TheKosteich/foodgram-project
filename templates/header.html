@@ -43,9 +43,12 @@
             <a href={% url 'login' %}?next={{ request.path }} class="nav__link link">Войти</a>
           </li>
           <li class="nav__item">
-            <a href={% url 'signup' %} class="button button_style_blue">
-              Создать аккаунт
-            </a>
+            {% url 'signup' as url%}
+            {% if request.path != url %}
+              <a href={{ url }} class="button button_style_blue">
+                Создать аккаунт
+              </a>
+            {% endif %}
           </li>
         </ul>
       {% endif %}

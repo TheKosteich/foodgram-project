@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from recipes.models import Recipe
 
@@ -12,10 +13,12 @@ def get_recipes(request):
     return render(request, 'recipes/recipes.html', context=context)
 
 
+@login_required(login_url='login')
 def get_follows(request):
     return render(request, 'recipes/follows.html')
 
 
+@login_required(login_url='login')
 def create_recipe(request):
     return render(request, 'recipes/new_recipe.html')
 
