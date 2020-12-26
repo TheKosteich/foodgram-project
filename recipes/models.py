@@ -57,3 +57,19 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
         related_name='choosers'
     )
+
+    def __str__(self):
+        return f'{self.user.username} - {self.recipe.title}'
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
+    )
