@@ -10,6 +10,7 @@ handler404 = 'recipes.views.page_not_found'  # noqa
 handler500 = 'recipes.views.server_error'  # noqa
 
 urlpatterns = [
+    path('api/', include('api.urls')),
     path('admin/', admin.site.urls),
     path('', get_recipes, name='index'),
     path('recipes/', include('recipes.urls')),
