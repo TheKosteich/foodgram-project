@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api',
     'debug_toolbar',
 
     'recipes'
@@ -131,3 +132,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+# REST Framework configuration parameters
+REST_FRAMEWORK = {
+    'SEARCH_PARAM': 'query'
+}

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from recipes.models import (
-    Ingredient, Recipe, RecipeIngredients, Favorite, Follow
+    Ingredient, Recipe, RecipeIngredients, Favorite, Follow, UserPurchases
 )
 
 User = get_user_model()
@@ -14,9 +14,20 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ['title', 'dimension']
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
-    pass
-
-
 class FollowSerializer(serializers.ModelSerializer):
     pass
+
+
+class UserPurchasesSerializer(serializers.ModelSerializer):
+    pass
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
+
+    class Meta:
+        model = Favorite
+        fields = ('user', 'recipe', )
