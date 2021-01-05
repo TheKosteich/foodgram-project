@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.shortcuts import get_list_or_404
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework import mixins
@@ -34,10 +35,18 @@ class FavoriteViewSet(mixins.CreateModelMixin,
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
+        favorites = get_list_or_404(
+            Favorite,
+            user=self.request.user
+        )
+        return favorites
+
+    def get_object(self):
+        recipe_id = self.kwargs.get(self.lookup_field)
         favorite = get_object_or_404(
             Favorite,
             user=self.request.user,
-            recipe_id=self.kwargs.get('id')
+            recipe_id=recipe_id
         )
         return favorite
 
