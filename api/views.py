@@ -3,11 +3,15 @@ from django.shortcuts import get_list_or_404
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework import mixins
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 
-from api.serializers import IngredientSerializer, FavoriteSerializer
+from api.serializers import IngredientSerializer
+from api.serializers import FavoriteSerializer
+from api.serializers import FollowSerializer
 from recipes.models import Ingredient
 from recipes.models import Recipe
+from recipes.models import Follow
 from recipes.models import UserPurchases
 from recipes.models import Favorite
 
@@ -24,6 +28,16 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 
 class UserPurchasesViewSet(viewsets.ModelViewSet):
     pass
+
+
+class FollowViewSet(mixins.ListModelMixin,
+                    mixins.CreateModelMixin,
+                    viewsets.GenericViewSet):
+    queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['=user__username', '=following__username']
 
 
 class FavoriteViewSet(mixins.CreateModelMixin,
