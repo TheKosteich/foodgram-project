@@ -6,7 +6,7 @@
           <a href="/" class="nav__link link">Рецепты</a>
         </li>
         {% if user.is_authenticated %}
-          {% url 'follows' as url %}
+          {% url 'followings' as url %}
           <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
             <a href={{ url }} class="nav__link link">Мои подписки</a>
           </li>
