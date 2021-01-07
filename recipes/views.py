@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from recipes.models import Recipe
+from recipes.models import Recipe, Follow
 
 
 def get_recipes(request):
@@ -14,8 +14,9 @@ def get_recipes(request):
 
 
 @login_required(login_url='login')
-def get_follows(request):
-    return render(request, 'recipes/follows.html')
+def get_followings(request):
+    context = {'followings': request.user.followings.all()}
+    return render(request, 'recipes/followings.html', context=context)
 
 
 @login_required(login_url='login')
