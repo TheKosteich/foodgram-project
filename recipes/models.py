@@ -68,17 +68,17 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='followings'
     )
-    author = models.ForeignKey(
+    following = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='followers'
     )
 
     class Meta:
-        unique_together = ('user', 'author',)
+        unique_together = ['user', 'following']
 
     def __str__(self):
-        return f'{self.user.username} following {self.author.username} '
+        return f'{self.user.username} following {self.following.username}
 
 
 class UserPurchases(models.Model):
