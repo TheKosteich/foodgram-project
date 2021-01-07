@@ -79,3 +79,11 @@ class Follow(models.Model):
 
     def __str__(self):
         return f'{self.user.username} following {self.author.username} '
+
+
+class UserPurchases(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='purchases')
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
+                                   related_name='purchases')
+    amount = models.IntegerField()
