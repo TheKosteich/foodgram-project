@@ -45,7 +45,8 @@ class UserPurchasesSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field='username',
-        read_only=True
+        read_only=True,
+        default=serializers.CurrentUserDefault()
     )
 
     class Meta:
