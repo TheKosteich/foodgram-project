@@ -11,8 +11,12 @@ from recipes.models import RecipesToShopping
 
 
 def get_recipes(request):
-    recipes = Recipe.objects.select_related('author',).order_by('title')
-    context = {'paginator': Paginator(recipes, 9)}
+    if 'tags' in request.GET.keys():
+        tags = request.GET['tags'].lower().split(',')
+        recipes = Recipe.objects.filter(tags__name__in=tags).order_by('title')
+    else:
+        recipes = Recipe.objects.select_related('author', ).order_by('title')
+    context = {'paginator': Paginator(recipes, 2)}
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
