@@ -7,4 +7,5 @@ urlpatterns = [
     path('new/', views.create_recipe, name='new_recipe'),
     path('favorites/', views.get_favorites, name='favorites'),
     path('shop_list/', views.get_shop_list, name='shop_list'),
+    path('pdf_shop_list/', views.get_pdf_shop_list, name='pdf_shop_list')
 ]

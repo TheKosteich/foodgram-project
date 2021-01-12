@@ -129,6 +129,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# directory for storing files for user to download
+DOWNLOADS_DIR = BASE_DIR / 'downloads'
+
 # Login
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'

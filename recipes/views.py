@@ -1,13 +1,19 @@
 from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.http import FileResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
+import mimetypes
 
 from recipes.models import Recipe
 from recipes.models import Follow
 from recipes.models import Favorite
 from recipes.models import UserPurchases
 from recipes.models import RecipesToShopping
+from recipes.models import RecipeIngredients
+
+from recipes.utils import get_shop_list_pdf
 
 
 def get_recipes(request):
@@ -38,6 +44,35 @@ def get_shop_list(request):
         'shop_list': request.user.recipes_to_shopping.all()
     }
     return render(request, 'recipes/shop_list.html', context=context)
+
+
+def get_pdf_shop_list(request):
+    recipes_to_shopping = request.user.recipes_to_shopping.all()
+    user_purchases = {}
+
+    for item in recipes_to_shopping:
+        recipe = item.recipe
+        recipe_ingredients = RecipeIngredients.objects.filter(recipe=recipe)
+        for recipe_ingredient_item in recipe_ingredients:
+            ingredient_title = recipe_ingredient_item.ingredient.title
+            ingredient_amount = recipe_ingredient_item.amount
+            if ingredient_title in user_purchases.keys():
+                user_purchases[ingredient_title] += ingredient_amount
+            else:
+                user_purchases[ingredient_title] = ingredient_amount
+
+    pdf_shop_list_path = get_shop_list_pdf(user_purchases)
+    pdf_shop_list = open(pdf_shop_list_path, 'rb')
+
+    return FileResponse(pdf_shop_list)
+
+    # with open(pdf_shop_list_path, 'rb') as pdf_shop_list:
+    #     mime_type, _ = mimetypes.guess_type(pdf_shop_list_path)
+    #     response = HttpResponse(pdf_shop_list.read(),
+    #                             content_type=mime_type)
+    #     response['Content-Disposition'] = 'inline; filename=shop_list.pdf'
+    #
+    #     return response
 
 
 def get_favorites(request):
