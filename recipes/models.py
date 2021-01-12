@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy
+from taggit.managers import TaggableManager
 
 User = get_user_model()
 
@@ -27,9 +28,7 @@ class Recipe(models.Model):
     description = models.TextField()
     ingredients = models.ManyToManyField(Ingredient,
                                          through='RecipeIngredients')
-    is_breakfast = models.BooleanField(default=False)
-    is_lunch = models.BooleanField(default=False)
-    is_dinner = models.BooleanField(default=False)
+    tags = TaggableManager()
     cooking_time = models.IntegerField()
     slug = models.SlugField()
 
@@ -90,3 +89,23 @@ class UserPurchases(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
                                    related_name='purchases')
     amount = models.IntegerField()
+
+    class Meta:
+        unique_together = ['user', 'ingredient']
+
+    def __str__(self):
+        return f'{self.user} - {self.ingredient}'
+
+
+class RecipesToShopping(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='recipes_to_shopping')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
+                               related_name='users')
+    count = models.IntegerField()
+
+    class Meta:
+        unique_together = ['user', 'recipe']
+
+    def __str__(self):
+        return f'{self.user} - {self.recipe}'
