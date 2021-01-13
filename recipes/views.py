@@ -62,17 +62,10 @@ def get_pdf_shop_list(request):
                 user_purchases[ingredient_title] = ingredient_amount
 
     pdf_shop_list_path = get_shop_list_pdf(user_purchases)
+
     pdf_shop_list = open(pdf_shop_list_path, 'rb')
 
     return FileResponse(pdf_shop_list)
-
-    # with open(pdf_shop_list_path, 'rb') as pdf_shop_list:
-    #     mime_type, _ = mimetypes.guess_type(pdf_shop_list_path)
-    #     response = HttpResponse(pdf_shop_list.read(),
-    #                             content_type=mime_type)
-    #     response['Content-Disposition'] = 'inline; filename=shop_list.pdf'
-    #
-    #     return response
 
 
 def get_favorites(request):
