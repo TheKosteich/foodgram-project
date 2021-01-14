@@ -12,17 +12,25 @@ from recipes.models import Favorite
 from recipes.models import UserPurchases
 from recipes.models import RecipesToShopping
 from recipes.models import RecipeIngredients
+from taggit.models import Tag
 
 from recipes.utils import get_shop_list_pdf
 
 
 def get_recipes(request):
+    context = {}
     if 'tags' in request.GET.keys():
-        tags = request.GET['tags'].lower().split(',')
-        recipes = Recipe.objects.filter(tags__name__in=tags).order_by('title')
+        tags_names = request.GET['tags'].lower().split(',')
+        print(tags_names)
+        recipes = Recipe.objects.filter(
+            tags__name__in=tags_names).distinct().order_by('title')
+        print(recipes)
     else:
+        tags = Tag.objects.all()
+        tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.select_related('author', ).order_by('title')
-    context = {'paginator': Paginator(recipes, 2)}
+    context['tags'] = tags_names
+    context['paginator'] = Paginator(recipes, 12)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
