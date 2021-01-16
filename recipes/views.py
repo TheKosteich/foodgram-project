@@ -10,6 +10,12 @@ from recipes.models import UserPurchases
 from recipes.models import RecipesToShopping
 
 
+def get_recipe(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    context = {'recipe': recipe}
+    return render(request, 'recipes/recipe_card.html', context=context)
+
+
 def get_recipes(request):
     if 'tags' in request.GET.keys():
         tags = request.GET['tags'].lower().split(',')

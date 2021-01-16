@@ -3,6 +3,7 @@ from recipes import views
 
 
 urlpatterns = [
+    path('<int:recipe_id>/', views.get_recipe, name='recipe'),
     path('followings/', views.get_followings, name='followings'),
     path('new/', views.create_recipe, name='new_recipe'),
     path('favorites/', views.get_favorites, name='favorites'),
