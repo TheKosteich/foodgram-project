@@ -1,0 +1,43 @@
+{% load recipe_filters %}
+
+<nav class="pagination" aria-label="Search results pages">
+  <ul class="pagination__container">
+
+    {% if page.has_previous %}
+      <li class="pagination__item">
+        <a class="pagination__link link" href="?page={{ page.previous_page_number }}">
+          <span class="icon-left"></span>
+        </a>
+      </li>
+    {% else %}
+      <li class="pagination__item">
+          <span class="icon-left"></span>
+      </li>
+    {% endif %}
+
+    {% for page_number in paginator.page_range %}
+      {% if page.number == page_number %}
+        <li class="pagination__item pagination__item_active">
+          <span class="pagination__link link">{{ page_number }}</span>
+        </li>
+      {% else %}
+        <li class="pagination__item">
+          <a class="pagination__link link" href="?page={{ page_number }}&tags={{ tags|list_to_string }}">{{ page_number }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page.has_next %}
+      <li class="pagination__item">
+        <a class="pagination__link link" href="?page={{ page.next_page_number }}&tags={{ tags|list_to_string }}">
+          <span class="icon-right"></span>
+        </a>
+      </li>
+    {% else %}
+      <li class="pagination__item">
+          <span class="icon-right"></span>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>

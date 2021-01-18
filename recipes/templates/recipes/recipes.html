@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Избранное {% endblock %}
+
+{% block content %}
+  <div class="main__header">
+    <h1 class="main__title">Рецепты</h1>
+
+    {% include "recipes/tags.html" with tags=tags %}
+
+  </div>
+  <div class="card-list">
+
+    {% for recipe in page %}
+      {% include "recipes/recipe_index_card.html" with recipe=recipe %}
+    {% endfor %}
+
+  </div>
+
+  {% if page.has_other_pages %}
+    {% include "paginator.html" with page=page paginator=paginator %}
+  {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+  {% if request.user.is_authenticated %}
+    <script src={% static 'js/indexAuth.js' %}></script>
+  {% else %}
+    <script src={% static 'js/indexNotAuth.js' %}></script>
+  {% endif %}
+{% endblock%}
