@@ -61,6 +61,9 @@ class Favorite(models.Model):
         related_name='choosers'
     )
 
+    class Meta:
+        unique_together = ['user', 'recipe']
+
     def __str__(self):
         return f'{self.user.username} - {self.recipe.title}'
 

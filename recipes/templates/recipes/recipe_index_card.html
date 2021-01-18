@@ -13,12 +13,12 @@
       {% for tag in recipe.tags.all %}
         {% ifequal 'breakfast' tag.name %}
           <li class="card__item">
-            <span class="badge badge_style_green">Завтрак</span>
+            <span class="badge badge_style_orange">Завтрак</span>
           </li>
         {% endifequal %}
         {% ifequal 'lunch' tag.name %}
           <li class="card__item">
-            <span class="badge badge_style_orange">Обед</span>
+            <span class="badge badge_style_green">Обед</span>
           </li>
         {% endifequal %}
         {% ifequal 'dinner' tag.name %}
