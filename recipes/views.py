@@ -17,6 +17,12 @@ from taggit.models import Tag
 from recipes.utils import get_shop_list_pdf
 
 
+def get_recipe(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    context = {'recipe': recipe}
+    return render(request, 'recipes/recipe_card.html', context=context)
+
+
 def get_recipes(request):
     context = {}
     if 'tags' in request.GET.keys():

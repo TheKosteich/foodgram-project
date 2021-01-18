@@ -1,5 +1,7 @@
+import re
 from django import template
 from taggit.models import Tag
+
 
 register = template.Library()
 
@@ -13,6 +15,15 @@ def revers_tags_list(tags, tag):
 
 
 @register.filter
+def make_paragraphs(text):
+    paragraphs = re.split(r'[\r\n]+', text)
+    result = ''
+    for paragraph in paragraphs:
+        result += f'<p class="single-card__section-text">{paragraph}</p>'
+    return result
+ 
+
+@register.filter
 def make_url(request, tag):
     if 'tags' in request.GET:
         source_tags = request.GET.get('tags').split(',')
@@ -22,7 +33,6 @@ def make_url(request, tag):
     return ','.join(tags)
 
 
-# make from tags list url tags parameters string
 @register.filter
 def list_to_string(tags):
     return ','.join(tags)
