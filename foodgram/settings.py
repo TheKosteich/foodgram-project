@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'rest_framework',
     'taggit',
     'api',
@@ -128,6 +130,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# directory for storing files for user to download
+DOWNLOADS_DIR = BASE_DIR / 'downloads'
 
 # Login
 LOGIN_URL = '/auth/login/'

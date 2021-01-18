@@ -1,3 +1,5 @@
+{% load recipe_filters %}
+
 <nav class="pagination" aria-label="Search results pages">
   <ul class="pagination__container">
 
@@ -20,14 +22,14 @@
         </li>
       {% else %}
         <li class="pagination__item">
-          <a class="pagination__link link" href="?page={{ page_number }}">{{ page_number }}</a>
+          <a class="pagination__link link" href="?page={{ page_number }}&tags={{ tags|list_to_string }}">{{ page_number }}</a>
         </li>
       {% endif %}
     {% endfor %}
 
     {% if page.has_next %}
       <li class="pagination__item">
-        <a class="pagination__link link" href="?page={{ page.next_page_number }}">
+        <a class="pagination__link link" href="?page={{ page.next_page_number }}&tags={{ tags|list_to_string }}">
           <span class="icon-right"></span>
         </a>
       </li>
