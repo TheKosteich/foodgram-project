@@ -36,3 +36,10 @@ def make_url(request, tag):
 @register.filter
 def list_to_string(tags):
     return ','.join(tags)
+
+
+@register.filter
+def is_favorite(user, recipe):
+    if user.favorites.filter(recipe=recipe).exists():
+        return True
+    return False
