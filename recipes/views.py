@@ -23,14 +23,14 @@ def get_recipes(request):
         tags_names = request.GET['tags'].lower().split(',')
         print(tags_names)
         recipes = Recipe.objects.filter(
-            tags__name__in=tags_names).distinct().order_by('title')
-        print(recipes)
+            tags__name__in=tags_names
+        ).distinct().order_by('title')
     else:
         tags = Tag.objects.all()
         tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.select_related('author', ).order_by('title')
     context['tags'] = tags_names
-    context['paginator'] = Paginator(recipes, 12)
+    context['paginator'] = Paginator(recipes, 2)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
@@ -81,7 +81,7 @@ def get_favorites(request):
     recipes = Recipe.objects.filter(
         id__in=favorites.values_list('recipe', flat=True)
     ).order_by('title')
-    context = {'paginator': Paginator(recipes, 9)}
+    context = {'paginator': Paginator(recipes, 3)}
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/favorites.html', context=context)
