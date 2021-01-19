@@ -139,6 +139,9 @@ LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
+# flatpages site ID
+SITE_ID = 1
+
 # REST Framework configuration parameters
 REST_FRAMEWORK = {
     'SEARCH_PARAM': 'query'

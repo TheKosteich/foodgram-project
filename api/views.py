@@ -3,7 +3,10 @@ from django.shortcuts import get_list_or_404
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework import mixins
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
 from api.serializers import IngredientSerializer
@@ -64,3 +67,25 @@ class FavoriteViewSet(mixins.CreateModelMixin,
         )
         return favorite
 
+
+class FavoritesAPIView(APIView):
+    def post(self, request):
+        recipe = Recipe.objects.get(id=request.data['id'])
+        user = request.user
+        is_favorite = user.favorites.filter(recipe_id=recipe.id).exists()
+        if is_favorite:
+            return Response({'success': 'False'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        Favorite.objects.create(user=user, recipe=recipe)
+        return Response({'success': 'True'}, status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        recipe = Recipe.objects.get(id=request.data['id'])
+        user = request.user
+        is_favorite = user.favorites.filter(recipe_id=recipe.id).exists()
+        if is_favorite:
+            user.favorites.get(recipe_id=recipe.id).delete()
+            return Response({'success': 'True'}, status=status.HTTP_200_OK)
+        return Response(
+            {'success': 'False'}, status=status.HTTP_400_BAD_REQUEST
+        )
