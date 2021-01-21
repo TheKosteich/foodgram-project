@@ -2,11 +2,11 @@
 
 {% load static %}
 
-{% block title %} Рецепты {% endblock %}
+{% block title %} Избранное {% endblock %}
 
 {% block content %}
   <div class="main__header">
-    <h1 class="main__title">Рецепты</h1>
+    <h1 class="main__title">{{ request.user.get_full_name }}</h1>
     <ul class="tags">
       <li class="tags__item">
         <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
@@ -37,9 +37,6 @@
 {% endblock %}
 
 {% block scripts %}
-  {% if request.user.is_authenticated %}
-    <script src={% static 'js/indexAuth.js' %}></script>
-  {% else %}
-    <script src={% static 'js/indexNotAuth.js' %}></script>
-  {% endif %}
+  <script src={% static 'recipes/js/favorite.js' %}></script>
+
 {% endblock%}
