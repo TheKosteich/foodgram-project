@@ -43,3 +43,10 @@ def is_favorite(user, recipe):
     if user.favorites.filter(recipe=recipe).exists():
         return True
     return False
+
+
+@register.filter
+def is_in_shopping_list(user, recipe):
+    if user.recipes_to_shopping.filter(recipe=recipe).exists():
+        return True
+    return False

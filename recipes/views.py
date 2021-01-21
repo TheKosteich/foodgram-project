@@ -36,7 +36,7 @@ def get_recipes(request):
         tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.select_related('author', ).order_by('title')
     context['tags'] = tags_names
-    context['paginator'] = Paginator(recipes, 2)
+    context['paginator'] = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
