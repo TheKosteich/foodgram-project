@@ -55,3 +55,11 @@ def recipes_word(num):
         return f'{num} рецепта'
     else:
         return f'{num} рецептов'
+
+
+@register.filter
+def is_in_shopping_list(user, recipe):
+    if user.recipes_to_shopping.filter(recipe=recipe).exists():
+        return True
+    return False
+

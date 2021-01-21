@@ -105,8 +105,7 @@ class RecipesToShopping(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='recipes_to_shopping')
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-                               related_name='users')
-    count = models.IntegerField()
+                               related_name='shopping_users')
 
     class Meta:
         unique_together = ['user', 'recipe']

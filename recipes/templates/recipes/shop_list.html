@@ -15,6 +15,8 @@
   <div class="card-list card-list_column">
     <ul class="shopping-list">
 
+      {% csrf_token %}
+
       {% for item in shop_list %}
         <li class="shopping-list__item" data-id={{ item.recipe.id }}>
           <div class="recipe recipe_reverse">
@@ -22,9 +24,7 @@
             <h3 class="recipe__title">{{ item.recipe.title }}</h3>
             <p class="recipe__text"><span class="icon-time"></span> {{ item.recipe.cooking_time }}</p>
           </div>
-          <a href={{ item.recipe.id }} class="shopping-list__button link">
-            Удалить
-          </a>
+          <a href="#" class="shopping-list__button link">Удалить</a>
         </li>
       {% endfor %}
 
@@ -37,4 +37,10 @@
       </a>
     {% endif %}
   </div>
+
 {% endblock %}
+
+{% block scripts %}
+  <script src={% static 'recipes/js/components/ShopList.js' %}></script>
+  <script src={% static 'recipes/shopList.js' %}></script>
+{% endblock%}

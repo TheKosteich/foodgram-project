@@ -40,21 +40,3 @@ class FollowSerializer(serializers.ModelSerializer):
 
 class UserPurchasesSerializer(serializers.ModelSerializer):
     pass
-
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field='username',
-        read_only=True,
-        default=serializers.CurrentUserDefault()
-    )
-
-    class Meta:
-        model = Favorite
-        fields = ('user', 'recipe')
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Favorite.objects.all(),
-                fields=['user', 'recipe']
-            )
-        ]

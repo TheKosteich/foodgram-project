@@ -42,16 +42,27 @@
     </div>
   </div>
   <div class="card__footer">
-
-    <button class="button button_style_light-blue" name="purchases" data-out>
-      {% csrf_token %}
-      <span class="icon-plus button__icon"></span>Добавить в покупки
-    </button>
+    {% csrf_token %}
     {% if user.is_authenticated %}
-      <button class="button button_style_none" name="favorites"{% if not request.user|is_favorite:recipe %} data-out{% endif %}>
-        {% csrf_token %}
-        <span class="icon-favorite{% if request.user|is_favorite:recipe %} icon-favorite_active{% endif %}"></span>
-      </button>
+      {% if not request.user|is_in_shopping_list:recipe %}
+        <button class="button button_style_light-blue" name="purchases" data-out>
+          <span class="icon-plus button__icon"></span>Добавить в покупки
+        </button>
+      {% else %}
+        <button class="button button_style_light-blue-outline" name="purchases">
+          <span class="icon-check button__icon"></span> Рецепт добавлен
+        </button>
+      {% endif %}
+
+      {% if request.user|is_favorite:recipe %}
+        <button class="button button_style_none" name="favorites">
+            <span class="icon-favorite icon-favorite_active"></span>
+        </button>
+      {% else %}
+        <button class="button button_style_none" name="favorites" data-out>
+          <span class="icon-favorite"></span>
+        </button>
+      {% endif %}
     {% endif %}
 
   </div>
