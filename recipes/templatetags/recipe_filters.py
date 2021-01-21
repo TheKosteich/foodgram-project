@@ -46,7 +46,20 @@ def is_favorite(user, recipe):
 
 
 @register.filter
+def recipes_word(num):
+    if num in [11, 12, 13, 14]:
+        return f'{num} рецептов'
+    elif num % 10 == 1:
+        return f'{num} рецепт'
+    elif num % 10 in [2, 3, 4]:
+        return f'{num} рецепта'
+    else:
+        return f'{num} рецептов'
+
+
+@register.filter
 def is_in_shopping_list(user, recipe):
     if user.recipes_to_shopping.filter(recipe=recipe).exists():
         return True
     return False
+
