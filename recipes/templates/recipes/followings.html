@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load recipe_filters %}
 
 {% block title %} Мои подписки {% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href={% static 'pages/myFollow.css' %}>
+  <link rel="stylesheet" href={% static 'recipes/pages/myFollow.css' %}>
 {% endblock %}
 
 {% block content %}
@@ -14,15 +15,15 @@
   </div>
   <div class="card-list">
 
-    {% for following in followings %}
-      <div class="card-user" data-author={{ following.author.id }}>
+    {% for item in followings %}
+      <div class="card-user" data-author={{ item.author.id }}>
         <div class="card-user__header">
-          <h2 class="card-user__title">{{ following.author.get_full_name }}</h2>
+          <h2 class="card-user__title">{{ item.following.get_full_name }}</h2>
         </div>
         <div class="card-user__body">
           <ul class="card-user__items">
 
-            {% for recipe in following.author.recipes.all %}
+            {% for recipe in item.following.recipes.all|slice:':3' %}
               <li class="card-user__item">
                 <div class="recipe">
                   <img src={{ recipe.image.url }} alt={{ recipe.title }} class="recipe__image">
@@ -33,15 +34,15 @@
                 </div>
               </li>
             {% endfor %}
-            <li class="card-user__item">
-              <a href="#" class="card-user__link link">Еще 7 рецептов...</a>
-            </li>
+            {% if item.following.recipes.count > 3 %}
+              <li class="card-user__item">
+                <a href="#" class="card-user__link link">Еще {{ item.following.recipes.count|add:'-3'|recipes_word }}...</a>
+              </li>
+            {% endif %}
           </ul>
         </div>
         <div class="card-user__footer">
-          <button class="button button_style_light-blue button_size_auto" name="subscribe">
-            Отписаться
-          </button>
+          <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
         </div>
       </div>
     {% endfor %}
@@ -82,43 +83,6 @@
                 <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
             </div>
         </div>
-    <div class="card-user" data-author="7091">
-            <div class="card-user__header">
-                <h2 class="card-user__title">Вероника Чернова</h2>
-            </div>
-            <div class="card-user__body">
-                <ul class="card-user__items">
-                    <li class="card-user__item">
-                        <div class="recipe">
-                            <img src="./images/testCardImg.png" alt="какой-то-текст" class="recipe__image">
-                            <h3 class="recipe__title">Французские тосты</h3>
-                            <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                        </div>
-                    </li>
-                    <li class="card-user__item">
-                        <div class="recipe">
-                            <img src="./images/testCardImg.png" alt="какой-то-текст" class="recipe__image">
-                            <h3 class="recipe__title">Французские тосты</h3>
-                            <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                        </div>
-                    </li>
-                    <li class="card-user__item">
-                        <div class="recipe">
-                            <img src="./images/testCardImg.png" alt="какой-то-текст" class="recipe__image">
-                            <h3 class="recipe__title">Французские тосты</h3>
-                            <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                        </div>
-                    </li>
-                    <li class="card-user__item">
-                        <a href="#" class="card-user__link link">Еще 7 рецептов...</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-user__footer">
-                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
-            </div>
-        </div>
-
   </div>
 
   {% if page.has_other_pages %}
@@ -128,5 +92,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src={% static 'js/components/MyFollow.js' %}></script>
+  <script src={% static 'recipes/js/components/MyFollow.js' %}></script>
 {% endblock%}
