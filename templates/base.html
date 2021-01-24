@@ -25,18 +25,6 @@
 
     {% include 'footer.html' %}
 
-    <script src={% static 'recipes/js/components/MainCards.js' %}></script>
-    <script src={% static 'recipes/js/components/Purchases.js' %}></script>
-    {% if user.is_authenticated %}
-      <script src={% static 'recipes/js/components/Favorites.js' %}></script>
-    {% endif %}
-    <script src={% static 'recipes/js/config/config.js' %}></script>
-    <script src={% static 'recipes/js/components/CardList.js' %}></script>
-    <script src={% static 'recipes/js/components/Header.js' %}></script>
-    <script src={% static 'recipes/js/api/Api.js' %}></script>
-
-
-
     {% block scripts %}{% endblock%}
 
   </body>
