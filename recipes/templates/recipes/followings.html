@@ -14,9 +14,10 @@
     <h1 class="main__title">Мои подписки</h1>
   </div>
   <div class="card-list">
+    {% csrf_token %}
 
     {% for item in followings %}
-      <div class="card-user" data-author={{ item.author.id }}>
+      <div class="card-user" data-author={{ item.following.id }}>
         <div class="card-user__header">
           <h2 class="card-user__title">{{ item.following.get_full_name }}</h2>
         </div>
@@ -36,7 +37,7 @@
             {% endfor %}
             {% if item.following.recipes.count > 3 %}
               <li class="card-user__item">
-                <a href="#" class="card-user__link link">Еще {{ item.following.recipes.count|add:'-3'|recipes_word }}...</a>
+                <a href={% url 'author_recipes' author_id=item.following.id %} class="card-user__link link">Еще {{ item.following.recipes.count|add:'-3'|recipes_word }}...</a>
               </li>
             {% endif %}
           </ul>

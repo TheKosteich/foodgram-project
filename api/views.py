@@ -29,18 +29,26 @@ class IngredientsViewSet(viewsets.ModelViewSet):
     search_fields = ['title']
 
 
-class UserPurchasesViewSet(viewsets.ModelViewSet):
-    pass
+class FollowingsAPIView(APIView):
+    def post(self, request):
+        user = request.user
+        following = User.objects.get(id=request.data['id'])
+        is_follow = user.followings.filter(following=following).exists()
+        if is_follow:
+            return Response({'success': 'False'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        Follow.objects.create(user=user, following=following)
+        return Response({'success': 'True'}, status=status.HTTP_201_CREATED)
 
-
-class FollowViewSet(mixins.ListModelMixin,
-                    mixins.CreateModelMixin,
-                    viewsets.GenericViewSet):
-    queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['=user__username', '=following__username']
+    def delete(self, request):
+        user = request.user
+        following = User.objects.get(id=request.data['id'])
+        is_follow = user.followings.filter(following=following).exists()
+        if is_follow:
+            user.followings.filter(following=following).delete()
+            return Response({'success': 'True'}, status=status.HTTP_200_OK)
+        return Response({'success': 'False'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class RecipesToShoppingAPIView(APIView):

@@ -4,6 +4,8 @@ from django.http import FileResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 import mimetypes
 
 from recipes.models import Recipe
@@ -16,6 +18,8 @@ from taggit.models import Tag
 
 from recipes.utils import get_shop_list_pdf
 
+User = get_user_model()
+
 
 def get_recipe(request, recipe_id):
     recipe = Recipe.objects.get(id=recipe_id)
@@ -27,7 +31,6 @@ def get_recipes(request):
     context = {}
     if 'tags' in request.GET.keys():
         tags_names = request.GET['tags'].lower().split(',')
-        print(tags_names)
         recipes = Recipe.objects.filter(
             tags__name__in=tags_names
         ).distinct().order_by('title')
@@ -35,6 +38,26 @@ def get_recipes(request):
         tags = Tag.objects.all()
         tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.select_related('author', ).order_by('title')
+    context['tags'] = tags_names
+    context['paginator'] = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    context['page'] = context['paginator'].get_page(page_number)
+    return render(request, 'recipes/recipes.html', context=context)
+
+
+def get_author_recipes(request, author_id):
+    author = get_object_or_404(User, id=author_id)
+    context = {'author': author}
+    if 'tags' in request.GET.keys():
+        tags_names = request.GET['tags'].lower().split(',')
+        recipes = Recipe.objects.filter(
+            author=author,
+            tags__name__in=tags_names
+        ).distinct().order_by('title')
+    else:
+        tags = Tag.objects.all()
+        tags_names = [tag.name for tag in tags]
+        recipes = Recipe.objects.filter(author=author).order_by('title')
     context['tags'] = tags_names
     context['paginator'] = Paginator(recipes, 6)
     page_number = request.GET.get('page')
