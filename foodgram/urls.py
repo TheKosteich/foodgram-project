@@ -3,6 +3,7 @@ from django.conf.urls import handler404, handler500  # noqa
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.flatpages import views as fp_views
 
 from recipes.views import get_recipes
 
@@ -16,6 +17,15 @@ urlpatterns = [
     path('recipes/', include('recipes.urls')),
     path('users/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
+    path('about/', include('django.contrib.flatpages.urls')),
+]
+
+# flatpages urls
+urlpatterns += [
+    path('about/author/', fp_views.flatpage,
+         {'url': '/about-author/'}, name='about_author'),
+    path('about/technologies/', fp_views.flatpage,
+         {'url': '/about-technologies/'}, name='about_technologies')
 ]
 
 # Django urls setting for development
