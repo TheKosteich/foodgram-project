@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 import mimetypes
 
@@ -14,6 +15,7 @@ from recipes.models import Favorite
 from recipes.models import UserPurchases
 from recipes.models import RecipesToShopping
 from recipes.models import RecipeIngredients
+from recipes.forms import NewRecipeForm
 from taggit.models import Tag
 
 from recipes.utils import get_shop_list_pdf
@@ -73,7 +75,16 @@ def get_followings(request):
 
 @login_required(login_url='login')
 def create_recipe(request):
-    return render(request, 'recipes/new_recipe.html')
+    context = {}
+    if request.method == 'POST':
+        new_recipe_form = NewRecipeForm(request.POST, request.FILES)
+        if new_recipe_form.is_valid():
+            new_recipe = Recipe.objects.create(author=request.user,
+                                               **new_recipe_form.cleaned_data)
+            return redirect(new_recipe.get_absolute_url())
+    elif request.method == 'GET':
+        context = {'form': NewRecipeForm()}
+    return render(request, 'recipes/new_recipe.html', context=context)
 
 
 def get_shop_list(request):

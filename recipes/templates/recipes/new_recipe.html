@@ -15,6 +15,11 @@
   </div>
   <div class="form-container">
     <form class="form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {{ form }}
+
+
       <div class="form__group">
         <label for="id_name" class="form__label">Название рецепта</label>
         <div class="form__field-group">
@@ -82,7 +87,7 @@
         <span class="form__label">Загрузить фото</span>
         <div class="form__field-group">
           <label for="id_file" class="form__file-button">Выбрать файл</label>
-          <input type="file" class="form__file" name="file" id="id_file">
+          <input type="file" class="form__file" name="file" accept="image/*" id="id_file">
           <span class="form__error"></span>
         </div>
       </div>
