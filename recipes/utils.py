@@ -25,8 +25,8 @@ def get_shop_list_pdf(user_purchases):
         os.getcwd(),
         'recipes/static/recipes/fonts/DejaVuSansCondensed.ttf'
     )
-    pdf_shop_list.add_font('DejaVu', '', font_path, uni=True)
-    pdf_shop_list.set_font('DejaVu', '', 14)
+    pdf_shop_list.add_font(family='DejaVu', fname=font_path, uni=True)
+    pdf_shop_list.set_font(family='DejaVu', size=14)
 
     for purchase, amount in user_purchases.items():
         pdf_shop_list.cell(0, 10, f'( ) {purchase} - {amount}', 0, 1)
@@ -34,7 +34,6 @@ def get_shop_list_pdf(user_purchases):
     date, random_string = dt.now().date(), get_random_string(8)
     shop_list_name = f'{date}_shop-list_{random_string}.pdf'
     shop_list_full_path = os.path.join(DOWNLOADS_DIR, shop_list_name)
-
-    pdf_shop_list.output(shop_list_full_path)
+    pdf_shop_list.output(name=shop_list_full_path)
 
     return shop_list_full_path

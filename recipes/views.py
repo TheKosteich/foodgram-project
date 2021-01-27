@@ -77,6 +77,7 @@ def get_followings(request):
 def create_recipe(request):
     context = {}
     if request.method == 'POST':
+        print(request.POST)
         new_recipe_form = NewRecipeForm(request.POST, request.FILES)
         if new_recipe_form.is_valid():
             new_recipe = Recipe.objects.create(author=request.user,
