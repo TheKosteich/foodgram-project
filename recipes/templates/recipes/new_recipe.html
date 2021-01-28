@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load recipe_filters %}
 
 {% block title %}Создание рецепта{% endblock %}
 
@@ -19,6 +20,7 @@
       <div class="form__group">
         <label for="id_name" class="form__label">Название рецепта</label>
         <div class="form__field-group">
+          {{ form.title|add_class:"form__input" }}
           <input type="text" id="id_name" name="name" class="form__input">
           <span class="form__error"></span>
         </div>
@@ -67,6 +69,7 @@
           Время приготовления
         </label>
         <div class="form__field-group form__field-group_time">
+          {{ form.cooking_time|add_class:"form__input" }}
           <input type="text" id="id_time" name="name" class="form__input">
           <label for="id_time" class="form__label">минут</label>
           <span class="form__error"></span>
@@ -75,6 +78,7 @@
       <div class="form__group">
         <label for="id_description" class="form__label">Описание</label>
         <div class="form__field-group">
+          {{ form.description|add_class:"form__textarea" }}
           <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
           <span class="form__error"></span>
         </div>
@@ -83,6 +87,7 @@
         <span class="form__label">Загрузить фото</span>
         <div class="form__field-group">
           <label for="id_file" class="form__file-button">Выбрать файл</label>
+          {{ form.image }}
           <input type="file" class="form__file" name="file" accept="image/*" id="id_file">
           <span class="form__error"></span>
         </div>
