@@ -15,7 +15,14 @@
     <h1 class="main__title">Создание рецепта</h1>
   </div>
   <div class="form-container">
-    <form class="form" method="post" enctype="multipart/form-data">
+    <form class="form" method="post" enctype="multipart/form-data" action="
+      {% url 'new_recipe' as new_recipe_url %}
+      {% if request.path == new_recipe_url %}
+        {% url 'new_recipe' %}
+      {% else %}
+        {% url 'edit_recipe' recipe.id %}
+      {% endif %}
+    ">
       {% csrf_token %}
       <div class="form__group">
         <label for={{ form.title.id_for_label }} class="form__label">{{ form.title.label }}</label>
@@ -28,18 +35,34 @@
         <p class="form__label">Теги</p>
         <div class="form__field-group">
           <div class="tags">
-            <div class="tags__item">
-              <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange" checked>
-              <label for="id_breakfast" class="tags__label">Завтрак</label>
-            </div>
-            <div class="tags__item">
-              <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
-              <label for="id_lunch" class="tags__label">Обед</label>
-            </div>
-            <div class="tags__item">
-              <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
-              <label for="id_dinner" class="tags__label">Ужин</label>
-            </div>
+            {% if tags %}
+                <div class="tags__item">
+                  <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange" {% if 'breakfast' in tags %}checked{% endif %}>
+                  <label for="id_breakfast" class="tags__label">Завтрак</label>
+                </div>
+                <div class="tags__item">
+                  <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" {% if 'lunch' in tags %}checked{% endif %}>
+                  <label for="id_lunch" class="tags__label">Обед</label>
+                </div>
+                <div class="tags__item">
+                  <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" {% if 'dinner' in tags %}checked{% endif %}>
+                  <label for="id_dinner" class="tags__label">Ужин</label>
+                </div>
+            {% else %}
+              <div class="tags__item">
+                <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange" checked>
+                <label for="id_breakfast" class="tags__label">Завтрак</label>
+              </div>
+              <div class="tags__item">
+                <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
+                <label for="id_lunch" class="tags__label">Обед</label>
+              </div>
+              <div class="tags__item">
+                <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
+                <label for="id_dinner" class="tags__label">Ужин</label>
+              </div>
+            {% endif %}
+
           </div>
           <span class="form__error"></span>
         </div>
@@ -56,6 +79,19 @@
             <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
           </div>
           <div class="form__field-group-ingredientes-container">
+            {% if recipe_ingredients %}
+              {% for recipe_ingredient in recipe_ingredients%}
+
+                <div class="form__field-item-ingredient" id="ing_{{ forloop.revcounter }}">
+                  <span> {{ recipe_ingredient.ingredient.title }} {{ recipe_ingredient.amount }}{{ recipe_ingredient.ingredient.dimension }}</span>
+                  <span class="form__field-item-delete"></span>
+                  <input id="nameIngredient_{{ forloop.revcounter }}" name="nameIngredient_{{ forloop.revcounter }}" type="hidden" value="аргановое масло">
+                  <input id="valueIngredient_{{ forloop.revcounter }}" name="valueIngredient_{{ forloop.revcounter }}" type="hidden" value="{{ recipe_ingredient.amount }}">
+                  <input id="unitsIngredient_{{ forloop.revcounter }}" name="unitsIngredient_{{ forloop.revcounter }}" type="hidden" value="{{ recipe_ingredient.ingredient.dimension }}">
+                </div>
+
+              {% endfor %}
+            {% endif %}
           </div>
           <span class="form__ingredient-link" id="addIng">
             Добавить ингредиент
@@ -91,7 +127,12 @@
         </div>
       </div>
       <div class="form__footer">
-        <button class="button button_style_blue">Создать рецепт</button>
+        {% url 'new_recipe' as new_recipe_url %}
+        {% if request.path == new_recipe_url %}
+          <button class="button button_style_blue">Создать рецепт</button>
+        {% else %}
+          <button class="button button_style_blue">Сохранить изменения</button>
+        {% endif %}
       </div>
     </form>
   </div>

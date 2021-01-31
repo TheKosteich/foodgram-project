@@ -103,15 +103,42 @@ def create_recipe(request):
 @login_required(login_url='login')
 def edit_recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    data = {
-        'title': recipe.title,
-        'cooking_time': recipe.cooking_time,
-        'description': recipe.description,
-        'image': recipe.image
-    }
-    recipe_form = NewRecipeForm(initial=data)
-    return render(request, 'recipes/new_recipe.html',
-                  context={'form': recipe_form})
+    if request.method == 'GET':
+        data = {
+            'title': recipe.title,
+            'cooking_time': recipe.cooking_time,
+            'description': recipe.description,
+            'image': recipe.image
+        }
+        recipe_form = NewRecipeForm(initial=data)
+        context = {
+            'edit_recipe': True,
+            'recipe': recipe,
+            'form': recipe_form,
+            'tags': [tag.name for tag in recipe.tags.all()],
+            'recipe_ingredients': recipe.recipe_ingredients.all()
+        }
+
+        return render(request, 'recipes/new_recipe.html',
+                      context=context)
+    elif request.method == 'POST':
+        print('POST')
+        recipe_form = NewRecipeForm(request.POST or None,
+                                    request.FILES or None,
+                                    instance=recipe)
+        if recipe_form.is_valid():
+            recipe_form.save()
+            recipe.tags.clear()
+            for tag in get_request_tags(request.POST):
+                recipe.tags.add(tag)
+            recipe.recipe_ingredients.all().delete()
+            for key, value in get_request_ingredients(request.POST).items():
+                RecipeIngredients.objects.get_or_create(
+                    recipe=recipe,
+                    ingredient=key,
+                    amount=value
+                )
+    return redirect(recipe)
 
 
 def get_shop_list(request):
