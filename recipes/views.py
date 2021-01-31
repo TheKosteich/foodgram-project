@@ -19,6 +19,8 @@ from recipes.forms import NewRecipeForm
 from taggit.models import Tag
 
 from recipes.utils import get_shop_list_pdf
+from recipes.utils import get_request_ingredients
+from recipes.utils import get_request_tags
 
 User = get_user_model()
 
@@ -77,15 +79,39 @@ def get_followings(request):
 def create_recipe(request):
     context = {}
     if request.method == 'POST':
-        print(request.POST)
-        new_recipe_form = NewRecipeForm(request.POST, request.FILES)
+        new_recipe_form = NewRecipeForm(request.POST or None,
+                                        request.FILES or None)
         if new_recipe_form.is_valid():
-            new_recipe = Recipe.objects.create(author=request.user,
-                                               **new_recipe_form.cleaned_data)
-            return redirect(new_recipe.get_absolute_url())
+            new_recipe = Recipe.objects.create(
+                author=request.user,
+                **new_recipe_form.cleaned_data
+            )
+            for tag in get_request_tags(request.POST):
+                new_recipe.tags.add(tag)
+            for key, value in get_request_ingredients(request.POST).items():
+                RecipeIngredients.objects.create(
+                    recipe=new_recipe,
+                    ingredient=key,
+                    amount=value
+                )
+            return redirect(new_recipe)
     elif request.method == 'GET':
         context = {'form': NewRecipeForm()}
     return render(request, 'recipes/new_recipe.html', context=context)
+
+
+@login_required(login_url='login')
+def edit_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    data = {
+        'title': recipe.title,
+        'cooking_time': recipe.cooking_time,
+        'description': recipe.description,
+        'image': recipe.image
+    }
+    recipe_form = NewRecipeForm(initial=data)
+    return render(request, 'recipes/new_recipe.html',
+                  context={'form': recipe_form})
 
 
 def get_shop_list(request):

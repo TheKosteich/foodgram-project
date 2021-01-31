@@ -18,10 +18,9 @@
     <form class="form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="form__group">
-        <label for="id_name" class="form__label">Название рецепта</label>
+        <label for={{ form.title.id_for_label }} class="form__label">{{ form.title.label }}</label>
         <div class="form__field-group">
           {{ form.title|add_class:"form__input" }}
-          <input type="text" id="id_name" name="name" class="form__input">
           <span class="form__error"></span>
         </div>
       </div>
@@ -65,28 +64,27 @@
         </div>
       </div>
       <div class="form__group">
-        <label for="id_time" class="form__label">
-          Время приготовления
+        <label for={{ form.cooking_time.id_for_label }} class="form__label">
+          {{ form.cooking_time.label }}
         </label>
         <div class="form__field-group form__field-group_time">
           {{ form.cooking_time|add_class:"form__input" }}
-          <input type="text" id="id_time" name="name" class="form__input">
-          <label for="id_time" class="form__label">минут</label>
+          <label for={{ form.cooking_time.id_for_label }} class="form__label">минут</label>
           <span class="form__error"></span>
         </div>
       </div>
       <div class="form__group">
-        <label for="id_description" class="form__label">Описание</label>
+        <label for={{ form.description.id_for_label }} class="form__label">
+          {{ form.description.label }}
+        </label>
         <div class="form__field-group">
           {{ form.description|add_class:"form__textarea" }}
-          <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
           <span class="form__error"></span>
         </div>
       </div>
       <div class="form__group">
-        <span class="form__label">Загрузить фото</span>
+        <span class="form__label">{{ form.image.label }}</span>
         <div class="form__field-group">
-          <label for="id_file" class="form__file-button">Выбрать файл</label>
           {{ form.image }}
           <input type="file" class="form__file" name="file" accept="image/*" id="id_file">
           <span class="form__error"></span>
@@ -106,6 +104,6 @@
   <script src={% static 'recipes/js/components/Header.js' %}></script>
   <script src={% static 'recipes/js/utils/debouncing.js' %}></script>
   <script src={% static 'recipes/js/api/Api.js' %}></script>
-  <script src={% static 'js/formRecipe.js' %}></script>
+  <script src={% static 'recipes/js/formRecipe.js' %}></script>
 
 {% endblock %}

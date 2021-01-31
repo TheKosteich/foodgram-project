@@ -6,10 +6,10 @@ from recipes.models import Recipe
 class NewRecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'tags', 'ingredients',
-                  'cooking_time', 'description', 'image']
-        # labels = {
-        #     'text': 'Текст',
-        #     'group': 'Группа',
-        #     'image': 'Изображение'
-        # }
+        fields = ['title', 'cooking_time', 'description', 'image']
+        labels = {
+            'title': 'Название рецепта',
+            'cooking_time': 'Время приготовления',
+            'description': 'Описание',
+            'image': 'Загрузить фото'
+        }
