@@ -1,23 +1,16 @@
-from django.shortcuts import get_object_or_404
-from django.shortcuts import get_list_or_404
-from rest_framework import filters
-from rest_framework import viewsets
-from rest_framework import mixins
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from rest_framework import filters
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from api.serializers import IngredientSerializer
-from api.serializers import FollowSerializer
+from recipes.models import Favorite
+from recipes.models import Follow
 from recipes.models import Ingredient
 from recipes.models import Recipe
-from recipes.models import Follow
-from recipes.models import UserPurchases
-from recipes.models import Favorite
 from recipes.models import RecipesToShopping
-
 
 User = get_user_model()
 

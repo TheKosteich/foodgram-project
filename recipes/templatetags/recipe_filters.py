@@ -25,10 +25,12 @@ def make_paragraphs(text):
 
 @register.filter
 def make_url(request, tag):
+    print(request.GET)
     if 'tags' in request.GET:
         source_tags = request.GET.get('tags').split(',')
     else:
         source_tags = [tag.name for tag in Tag.objects.all()]
+    print(source_tags)
     tags = revers_tags_list(source_tags, tag)
     return ','.join(tags)
 

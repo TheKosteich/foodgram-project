@@ -5,8 +5,6 @@ from datetime import datetime as dt
 
 from fpdf import FPDF
 
-from foodgram.settings import BASE_DIR
-from foodgram.settings import STATIC_URL
 from foodgram.settings import DOWNLOADS_DIR
 from recipes.models import Ingredient
 from taggit.models import Tag

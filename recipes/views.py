@@ -1,26 +1,18 @@
-from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.http import FileResponse
-from django.shortcuts import render
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_list_or_404
+from django.core.paginator import Paginator
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.contrib.auth import get_user_model
-import mimetypes
-
-from recipes.models import Recipe
-from recipes.models import Follow
-from recipes.models import Favorite
-from recipes.models import UserPurchases
-from recipes.models import RecipesToShopping
-from recipes.models import RecipeIngredients
-from recipes.forms import NewRecipeForm
+from django.shortcuts import render
 from taggit.models import Tag
 
-from recipes.utils import get_shop_list_pdf
+from recipes.forms import NewRecipeForm
+from recipes.models import Recipe
+from recipes.models import RecipeIngredients
 from recipes.utils import get_request_ingredients
 from recipes.utils import get_request_tags
+from recipes.utils import get_shop_list_pdf
 
 User = get_user_model()
 
@@ -141,6 +133,7 @@ def edit_recipe(request, recipe_id):
     return redirect(recipe)
 
 
+@login_required(login_url='login')
 def get_shop_list(request):
     context = {
         'shop_list': request.user.recipes_to_shopping.all()
@@ -148,6 +141,7 @@ def get_shop_list(request):
     return render(request, 'recipes/shop_list.html', context=context)
 
 
+@login_required(login_url='login')
 def get_pdf_shop_list(request):
     recipes_to_shopping = request.user.recipes_to_shopping.all()
     user_purchases = {}
@@ -170,6 +164,7 @@ def get_pdf_shop_list(request):
     return FileResponse(pdf_shop_list)
 
 
+@login_required(login_url='login')
 def get_favorites(request):
     favorites = request.user.favorites.all()
     recipes = Recipe.objects.filter(

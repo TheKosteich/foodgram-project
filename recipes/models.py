@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext_lazy
 from taggit.managers import TaggableManager
 
 User = get_user_model()
@@ -85,20 +84,6 @@ class Follow(models.Model):
 
     def __str__(self):
         return f'{self.user.username} following {self.following.username}'
-
-
-class UserPurchases(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='purchases')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
-                                   related_name='purchases')
-    amount = models.IntegerField()
-
-    class Meta:
-        unique_together = ['user', 'ingredient']
-
-    def __str__(self):
-        return f'{self.user} - {self.ingredient}'
 
 
 class RecipesToShopping(models.Model):
