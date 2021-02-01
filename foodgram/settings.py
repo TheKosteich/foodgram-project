@@ -121,6 +121,11 @@ USE_L10N = True
 USE_TZ = True
 
 
+#  connect engine filebased.EmailBackend
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# choose directory for storing emails
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
