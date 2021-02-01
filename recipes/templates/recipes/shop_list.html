@@ -30,7 +30,7 @@
 
     </ul>
     {% if shop_list %}
-      <a href="#">
+      <a href={% url 'pdf_shop_list' %}>
         <button class="button button_style_blue">
           Скачать список
         </button>
@@ -46,6 +46,6 @@
   <script src={% static 'recipes/js/components/Header.js' %}></script>
   <script src={% static 'recipes/js/components/ShopList.js' %}></script>
   <script src={% static 'recipes/js/api/Api.js' %}></script>
-  <script src={% static 'recipes/shopList.js' %}></script>
+  <script src={% static 'recipes/js/shopList.js' %}></script>
 
 {% endblock%}

@@ -59,7 +59,9 @@ def recipes_word(num):
 
 @register.filter
 def is_in_shopping_list(user, recipe):
-    if user.recipes_to_shopping.filter(recipe=recipe).exists():
-        return True
-    return False
+    return user.recipes_to_shopping.filter(recipe=recipe).exists()
 
+
+@register.filter
+def add_class(field, css_class):
+    return field.as_widget(attrs={'class': css_class})

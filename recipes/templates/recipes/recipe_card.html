@@ -11,18 +11,32 @@
 
 
 {% block content %}
+  {% csrf_token %}
   <div class="single-card" data-id={{ recipe.id }} data-author={{ recipe.author.id }}>
     <img src="{{ recipe.image.url }}" alt={{ recipe.title }} class="single-card__image">
     <div class="single-card__info">
       <div class="single-card__header-info">
         <h1 class="single-card__title">{{ recipe.title }}</h1>
         <div class="single-card__favorite">
-          <button class="button button_style_none" name="favorites" data-out>
-            <span class="icon-favorite icon-favorite_big"></span>
-          </button>
-          <div class="single-card__favorite-tooltip tooltip">
-            Добавить в избранное
-          </div>
+
+          {% if user.is_authenticated %}
+            {% if request.user|is_favorite:recipe %}
+              <button class="button button_style_none" name="favorites">
+                  <span class="icon-favorite icon-favorite_active"></span>
+              </button>
+              <div class="single-card__favorite-tooltip tooltip">
+                Удалить из избранного
+              </div>
+            {% else %}
+              <button class="button button_style_none" name="favorites" data-out>
+                <span class="icon-favorite"></span>
+              </button>
+              <div class="single-card__favorite-tooltip tooltip">
+                Добавить в избранное
+              </div>
+            {% endif %}
+          {% endif %}
+
         </div>
       </div>
       <ul class="single-card__items">
@@ -30,12 +44,12 @@
         {% for tag in recipe.tags.all %}
           {% ifequal 'breakfast' tag.name %}
             <li class="card__item">
-              <span class="badge badge_style_green">Завтрак</span>
+              <span class="badge badge_style_orange">Завтрак</span>
             </li>
           {% endifequal %}
           {% ifequal 'lunch' tag.name %}
             <li class="card__item">
-              <span class="badge badge_style_orange">Обед</span>
+              <span class="badge badge_style_green">Обед</span>
             </li>
           {% endifequal %}
           {% ifequal 'dinner' tag.name %}
@@ -58,7 +72,7 @@
           </li>
           <li class="single-card__item">
             {% ifequal request.user recipe.author %}
-              <a style="margin-left: 2.5em" href="#" class="single-card__text">
+              <a style="margin-left: 2.5em" href={% url 'edit_recipe' recipe.id %} class="single-card__text">
                 Редактировать рецепт
               </a>
             {% endifequal %}
@@ -67,9 +81,19 @@
       </div>
       <ul class="single-card__items">
         <li class="single-card__item">
-          <button class="button button_style_blue" name="purchases" data-out>
-            <span class="icon-plus"></span> Добавить в покупки
-          </button>
+
+          {% if user.is_authenticated %}
+            {% if not request.user|is_in_shopping_list:recipe %}
+              <button class="button button_style_light-blue" name="purchases" data-out>
+                <span class="icon-plus button__icon"></span>Добавить в покупки
+              </button>
+            {% else %}
+              <button class="button button_style_light-blue-outline" name="purchases">
+                <span class="icon-check button__icon"></span> Рецепт добавлен
+              </button>
+            {% endif %}
+          {% endif %}
+
         </li>
         <li class="single-card__item">
           <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
@@ -98,10 +122,17 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src={% static 'js/components/Favorites.js' %}></script>
-  <script src={% static 'js/components/Subscribe.js' %}></script>
 
-  <script src={% static 'js/components/SingleCard.js' %}></script>
+  <script src={% static 'recipes/js/components/MainCards.js' %}></script>
+  <script src={% static 'recipes/js/components/Purchases.js' %}></script>
+  <script src={% static 'recipes/js/config/config.js' %}></script>
+  <script src={% static 'recipes/js/components/Header.js' %}></script>
+  <script src={% static 'recipes/js/components/Favorites.js' %}></script>
+  <script src={% static 'recipes/js/components/Subscribe.js' %}></script>
+  <script src={% static 'recipes/js/api/Api.js' %}></script>
 
-  <script src={% static 'singlePage.js' %}></script>
+  <script src={% static 'recipes/js/components/SingleCard.js' %}></script>
+
+  <script src={% static 'recipes/js/singlePage.js' %}></script>
+
 {% endblock %}

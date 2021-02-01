@@ -36,7 +36,7 @@ class Recipe(models.Model):
         return f'{self.title} - {self.author.username}'
 
     def get_absolute_url(self):
-        return f'recipes/{self.id}/'
+        return f'/recipes/{self.id}/'
 
 
 class RecipeIngredients(models.Model):
