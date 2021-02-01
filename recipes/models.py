@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext_lazy
 from taggit.managers import TaggableManager
 
 User = get_user_model()
@@ -36,7 +35,7 @@ class Recipe(models.Model):
         return f'{self.title} - {self.author.username}'
 
     def get_absolute_url(self):
-        return f'recipes/{self.id}/'
+        return f'/recipes/{self.id}/'
 
 
 class RecipeIngredients(models.Model):
@@ -87,26 +86,11 @@ class Follow(models.Model):
         return f'{self.user.username} following {self.following.username}'
 
 
-class UserPurchases(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='purchases')
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
-                                   related_name='purchases')
-    amount = models.IntegerField()
-
-    class Meta:
-        unique_together = ['user', 'ingredient']
-
-    def __str__(self):
-        return f'{self.user} - {self.ingredient}'
-
-
 class RecipesToShopping(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='recipes_to_shopping')
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-                               related_name='users')
-    count = models.IntegerField()
+                               related_name='shopping_users')
 
     class Meta:
         unique_together = ['user', 'recipe']

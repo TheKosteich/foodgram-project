@@ -5,9 +5,9 @@ from datetime import datetime as dt
 
 from fpdf import FPDF
 
-from foodgram.settings import BASE_DIR
-from foodgram.settings import STATIC_URL
 from foodgram.settings import DOWNLOADS_DIR
+from recipes.models import Ingredient
+from taggit.models import Tag
 
 
 def get_random_string(length):
@@ -25,8 +25,8 @@ def get_shop_list_pdf(user_purchases):
         os.getcwd(),
         'recipes/static/recipes/fonts/DejaVuSansCondensed.ttf'
     )
-    pdf_shop_list.add_font('DejaVu', '', font_path, uni=True)
-    pdf_shop_list.set_font('DejaVu', '', 14)
+    pdf_shop_list.add_font(family='DejaVu', fname=font_path, uni=True)
+    pdf_shop_list.set_font(family='DejaVu', size=14)
 
     for purchase, amount in user_purchases.items():
         pdf_shop_list.cell(0, 10, f'( ) {purchase} - {amount}', 0, 1)
@@ -34,7 +34,35 @@ def get_shop_list_pdf(user_purchases):
     date, random_string = dt.now().date(), get_random_string(8)
     shop_list_name = f'{date}_shop-list_{random_string}.pdf'
     shop_list_full_path = os.path.join(DOWNLOADS_DIR, shop_list_name)
-
-    pdf_shop_list.output(shop_list_full_path)
+    pdf_shop_list.output(name=shop_list_full_path)
 
     return shop_list_full_path
+
+
+def get_request_ingredients(request_dict):
+    recipe_ingredients = {}
+    for key, value in request_dict.items():
+        if 'nameIngredient' in key:
+            ingredient_post_index = key[key.index('_') + 1:]
+            dimension = request_dict[
+                f'unitsIngredient_{ingredient_post_index}'
+            ]
+            ingredient, created = Ingredient.objects.get_or_create(
+                title=value,
+                dimension=dimension
+            )
+
+            recipe_ingredients[ingredient] = request_dict[
+                f'valueIngredient_{ingredient_post_index}'
+            ]
+    return recipe_ingredients
+
+
+def get_request_tags(request_dict):
+    existing_tags = Tag.objects.all()
+    tag_names = [tag.name for tag in existing_tags]
+    request_tags = []
+    for key, value in request_dict.items():
+        if key in tag_names and value == 'on':
+            request_tags.append(key)
+    return request_tags

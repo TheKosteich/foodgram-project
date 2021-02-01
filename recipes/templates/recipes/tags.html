@@ -1,4 +1,5 @@
 {% load recipe_filters %}
+
 <ul class="tags">
   <li class="tags__item">
     <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange{% if 'breakfast' in tags %} tags__checkbox_active{% endif %}" href="{{ request.path }}?tags={{ request|make_url:'breakfast' }}"></a>

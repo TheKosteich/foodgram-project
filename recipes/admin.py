@@ -1,11 +1,10 @@
 from django.contrib import admin
 
+from recipes.models import Favorite
+from recipes.models import Follow
 from recipes.models import Ingredient
 from recipes.models import Recipe
 from recipes.models import RecipeIngredients
-from recipes.models import Favorite
-from recipes.models import Follow
-from recipes.models import UserPurchases
 from recipes.models import RecipesToShopping
 
 
@@ -36,11 +35,6 @@ class FavoriteAdmin(admin.ModelAdmin):
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(UserPurchases)
-class UserPurchasesAdmin(admin.ModelAdmin):
     pass
 
 

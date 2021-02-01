@@ -5,7 +5,7 @@
 {% block title %} Мои подписки {% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href={% static 'pages/shopList.css' %}>
+  <link rel="stylesheet" href={% static 'recipes/pages/shopList.css' %}>
 {% endblock %}
 
 {% block content %}
@@ -15,6 +15,8 @@
   <div class="card-list card-list_column">
     <ul class="shopping-list">
 
+      {% csrf_token %}
+
       {% for item in shop_list %}
         <li class="shopping-list__item" data-id={{ item.recipe.id }}>
           <div class="recipe recipe_reverse">
@@ -22,19 +24,28 @@
             <h3 class="recipe__title">{{ item.recipe.title }}</h3>
             <p class="recipe__text"><span class="icon-time"></span> {{ item.recipe.cooking_time }}</p>
           </div>
-          <a href={{ item.recipe.id }} class="shopping-list__button link">
-            Удалить
-          </a>
+          <a href="#" class="shopping-list__button link">Удалить</a>
         </li>
       {% endfor %}
 
     </ul>
     {% if shop_list %}
-      <a href="#">
+      <a href={% url 'pdf_shop_list' %}>
         <button class="button button_style_blue">
           Скачать список
         </button>
       </a>
     {% endif %}
   </div>
+
 {% endblock %}
+
+{% block scripts %}
+
+  <script src={% static 'recipes/js/config/config.js' %}></script>
+  <script src={% static 'recipes/js/components/Header.js' %}></script>
+  <script src={% static 'recipes/js/components/ShopList.js' %}></script>
+  <script src={% static 'recipes/js/api/Api.js' %}></script>
+  <script src={% static 'recipes/js/shopList.js' %}></script>
+
+{% endblock%}

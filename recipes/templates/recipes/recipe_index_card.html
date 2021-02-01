@@ -1,4 +1,5 @@
 {% load static %}
+{% load recipe_filters %}
 
 <div class="card" data-id={{ recipe.id }}>
   <a href={{ recipe.get_absolute_url }} class="link" target="_blank">
@@ -34,22 +35,34 @@
         <span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
       <p class="card__text">
         <span class="icon-user"></span>
-        <a href="#" style="color: black">
+        <a href={% url 'author_recipes' author_id=recipe.author.id %} style="color: black">
           {{ recipe.author.get_full_name }}
         </a>
       </p>
     </div>
   </div>
   <div class="card__footer">
-
-    <button class="button button_style_light-blue" name="purchases" data-out>
-      <span class="icon-plus button__icon"></span>
-      Добавить в покупки
-    </button>
     {% if user.is_authenticated %}
-      <button class="button button_style_none" name="favorites" data-out>
-        <span class="icon-favorite"></span>
-      </button>
+      {% if not request.user|is_in_shopping_list:recipe %}
+        <button class="button button_style_light-blue" name="purchases" data-out>
+          <span class="icon-plus button__icon"></span>Добавить в покупки
+        </button>
+      {% else %}
+        <button class="button button_style_light-blue-outline" name="purchases">
+          <span class="icon-check button__icon"></span> Рецепт добавлен
+        </button>
+      {% endif %}
+
+      {% if request.user|is_favorite:recipe %}
+        <button class="button button_style_none" name="favorites">
+            <span class="icon-favorite icon-favorite_active"></span>
+        </button>
+      {% else %}
+        <button class="button button_style_none" name="favorites" data-out>
+          <span class="icon-favorite"></span>
+        </button>
+      {% endif %}
     {% endif %}
+
   </div>
 </div>
