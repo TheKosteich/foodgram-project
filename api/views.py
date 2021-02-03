@@ -1,16 +1,12 @@
 from django.contrib.auth import get_user_model
-from rest_framework import filters
-from rest_framework import status
-from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.serializers import IngredientSerializer
-from recipes.models import Favorite
-from recipes.models import Follow
-from recipes.models import Ingredient
-from recipes.models import Recipe
-from recipes.models import RecipesToShopping
+from recipes.models import (Favorite, Follow, Ingredient, Recipe,
+                            RecipesToShopping)
 
 User = get_user_model()
 
@@ -25,11 +21,15 @@ class IngredientsViewSet(viewsets.ModelViewSet):
 class FollowingsAPIView(APIView):
     def post(self, request):
         user = request.user
-        following = User.objects.get(id=request.data['id'])
-        is_follow = user.followings.filter(following=following).exists()
-        if is_follow:
+        if 'id' in request.data:
+            following = get_object_or_404(User, id=request.data['id'])
+            if user.followings.filter(following=following).exists():
+                return Response({'success': 'False'},
+                                status=status.HTTP_400_BAD_REQUEST)
+        else:
             return Response({'success': 'False'},
                             status=status.HTTP_400_BAD_REQUEST)
+
         Follow.objects.create(user=user, following=following)
         return Response({'success': 'True'}, status=status.HTTP_201_CREATED)
 
