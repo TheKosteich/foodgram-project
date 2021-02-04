@@ -3,7 +3,7 @@
     <div class="nav__container container">
       <ul class="nav__items list">
         <li class="nav__item {% if request.path == '/' %} nav__item_active{% endif %}">
-          <a href="/" class="nav__link link">Рецепты</a>
+          <a href={% url 'index' %} class="nav__link link">Рецепты</a>
         </li>
         {% if user.is_authenticated %}
           {% url 'followings' as url %}

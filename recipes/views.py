@@ -2,17 +2,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import FileResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import redirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from taggit.models import Tag
 
 from recipes.forms import NewRecipeForm
-from recipes.models import Recipe
-from recipes.models import RecipeIngredients
-from recipes.utils import get_request_ingredients
-from recipes.utils import get_request_tags
-from recipes.utils import get_shop_list_pdf
+from recipes.models import Recipe, RecipeIngredients
+from recipes.utils import (get_request_ingredients, get_request_tags,
+                           get_shop_list_pdf)
 
 User = get_user_model()
 
@@ -174,13 +170,3 @@ def get_favorites(request):
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/favorites.html', context=context)
-
-
-# service functions described below
-def page_not_found(request, exception):
-    context = {'path': request.path}
-    return render(request, 'misc/404.html', context, status=404)
-
-
-def server_error(request):
-    return render(request, 'misc/500.html', status=500)
