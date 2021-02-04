@@ -9,7 +9,7 @@
   <div class="main__header">
     <h1 class="main__title">{% if author %}{{ author.get_full_name }}{% else %}Рецепты{% endif %}</h1>
 
-    {% include "recipes/tags.html" with tags=tags %}
+    {% include "recipes/includes/tags.html" with tags=tags %}
 
   </div>
 
@@ -32,13 +32,13 @@
   <div class="card-list">
 
     {% for recipe in page %}
-      {% include "recipes/recipe_index_card.html" with recipe=recipe %}
+      {% include "recipes/includes/recipe_index_card.html" with recipe=recipe %}
     {% endfor %}
 
   </div>
 
   {% if page.has_other_pages %}
-    {% include "paginator.html" with page=page paginator=paginator %}
+    {% include "includes/paginator.html" with page=page paginator=paginator %}
   {% endif %}
 
 {% endblock %}

@@ -2,26 +2,22 @@
   <nav class="nav">
     <div class="nav__container container">
       <ul class="nav__items list">
-        <li class="nav__item {% if request.path == '/' %} nav__item_active{% endif %}">
+        <li class="nav__item {% if request.resolver_match.url_name == 'index' %} nav__item_active{% endif %}">
           <a href={% url 'index' %} class="nav__link link">Рецепты</a>
         </li>
         {% if user.is_authenticated %}
-          {% url 'followings' as url %}
-          <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
-            <a href={{ url }} class="nav__link link">Мои подписки</a>
+          <li class="nav__item {% if request.resolver_match.url_name == 'followings' %}nav__item_active{% endif %}">
+            <a href={% url 'followings' %} class="nav__link link">Мои подписки</a>
           </li>
-          {% url 'new_recipe' as url %}
-          <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
-            <a href={{ url }} class="nav__link link">Создать рецепт</a>
+          <li class="nav__item {% if request.resolver_match.url_name == 'new_recipe' %}nav__item_active{% endif %}">
+            <a href={% url 'new_recipe' %} class="nav__link link">Создать рецепт</a>
           </li>
-          {% url 'favorites' as url %}
-          <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
-            <a href={{ url }} class="nav__link link">Избранное</a>
+          <li class="nav__item {% if request.resolver_match.url_name == 'favorites' %}nav__item_active{% endif %}">
+            <a href={% url 'favorites' %} class="nav__link link">Избранное</a>
           </li>
         {% endif %}
-        {% url 'shop_list' as url %}
-        <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
-          <a href={{ url }} class="nav__link link">Список покупок</a>
+        <li class="nav__item {% if request.resolver_match.url_name == 'shop_list' %}nav__item_active{% endif %}">
+          <a href={% url 'shop_list' %} class="nav__link link">Список покупок</a>
             <span class="badge badge_style_blue nav__badge" id="counter">
               {% if user.recipes_to_shopping.count %}
                 {{ user.recipes_to_shopping.count }}
@@ -33,9 +29,8 @@
       </ul>
       {% if user.is_authenticated %}
         <ul class="nav__items list">
-          {% url 'password_change' as url %}
-          <li class="nav__item {% if request.path == url %}nav__item_active{% endif %}">
-            <a href={{ url }} class="nav__link link">
+          <li class="nav__item {% if request.resolver_match.url_name == 'password_change' %}nav__item_active{% endif %}">
+            <a href={% url 'password_change' %} class="nav__link link">
               Изменить пароль
             </a>
           </li>
@@ -49,9 +44,8 @@
             <a href={% url 'login' %}?next={{ request.path }} class="nav__link link">Войти</a>
           </li>
           <li class="nav__item">
-            {% url 'signup' as url%}
-            {% if request.path != url %}
-              <a href={{ url }} class="button button_style_blue">
+            {% if request.resolver_match.url_name != 'signup' %}
+              <a href={% url 'signup' %} class="button button_style_blue">
                 Создать аккаунт
               </a>
             {% endif %}
