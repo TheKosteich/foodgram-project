@@ -26,7 +26,7 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to='recipe_images')
     description = models.TextField()
     ingredients = models.ManyToManyField(Ingredient,
-                                         through='RecipeIngredients')
+                                         through='RecipeIngredient')
     tags = TaggableManager()
     cooking_time = models.IntegerField()
     slug = models.SlugField()
@@ -38,7 +38,7 @@ class Recipe(models.Model):
         return f'/recipes/{self.id}/'
 
 
-class RecipeIngredients(models.Model):
+class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
                                related_name='recipe_ingredients')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)

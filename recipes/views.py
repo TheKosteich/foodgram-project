@@ -5,8 +5,9 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from taggit.models import Tag
 
+from foodgram.settings import PAGE_ITEMS_COUNT
 from recipes.forms import NewRecipeForm
-from recipes.models import Recipe, RecipeIngredients
+from recipes.models import Recipe, RecipeIngredient
 from recipes.utils import (get_request_ingredients, get_request_tags,
                            get_shop_list_pdf)
 
@@ -31,7 +32,7 @@ def get_recipes(request):
         tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.select_related('author', ).order_by('title')
     context['tags'] = tags_names
-    context['paginator'] = Paginator(recipes, 6)
+    context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
@@ -51,7 +52,7 @@ def get_author_recipes(request, author_id):
         tags_names = [tag.name for tag in tags]
         recipes = Recipe.objects.filter(author=author).order_by('title')
     context['tags'] = tags_names
-    context['paginator'] = Paginator(recipes, 6)
+    context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/recipes.html', context=context)
@@ -77,7 +78,7 @@ def create_recipe(request):
             for tag in get_request_tags(request.POST):
                 new_recipe.tags.add(tag)
             for key, value in get_request_ingredients(request.POST).items():
-                RecipeIngredients.objects.create(
+                RecipeIngredient.objects.create(
                     recipe=new_recipe,
                     ingredient=key,
                     amount=value
@@ -121,7 +122,7 @@ def edit_recipe(request, recipe_id):
                 recipe.tags.add(tag)
             recipe.recipe_ingredients.all().delete()
             for key, value in get_request_ingredients(request.POST).items():
-                RecipeIngredients.objects.get_or_create(
+                RecipeIngredient.objects.get_or_create(
                     recipe=recipe,
                     ingredient=key,
                     amount=value
@@ -144,7 +145,7 @@ def get_pdf_shop_list(request):
 
     for item in recipes_to_shopping:
         recipe = item.recipe
-        recipe_ingredients = RecipeIngredients.objects.filter(recipe=recipe)
+        recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
         for recipe_ingredient_item in recipe_ingredients:
             ingredient_title = recipe_ingredient_item.ingredient.title
             ingredient_amount = recipe_ingredient_item.amount

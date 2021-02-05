@@ -1,11 +1,11 @@
 from django.contrib import admin
 
 from recipes.models import (Favorite, Follow, Ingredient, Recipe,
-                            RecipeIngredients, RecipesToShopping)
+                            RecipeIngredient, RecipesToShopping)
 
 
 class RecipeIngredientsInline(admin.TabularInline):
-    model = RecipeIngredients
+    model = RecipeIngredient
     extra = 1
 
 
@@ -19,7 +19,7 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = (RecipeIngredientsInline,)
 
 
-@admin.register(RecipeIngredients)
+@admin.register(RecipeIngredient)
 class RecipeIngredientsAdmin(admin.ModelAdmin):
     pass
 
