@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from api.serializers import IngredientSerializer
 from recipes.models import (Favorite, Follow, Ingredient, Recipe,
-                            RecipesToShopping)
+                            RecipeToShopping)
 
 User = get_user_model()
 
@@ -47,25 +47,25 @@ class FollowingsAPIView(APIView):
 class RecipesToShoppingAPIView(APIView):
     def post(self, request):
         recipe = Recipe.objects.get(id=request.data['id'])
-        is_in_shopping_list = RecipesToShopping.objects.filter(
+        is_in_shopping_list = RecipeToShopping.objects.filter(
             user=request.user,
             recipe=recipe
         ).exists()
         if is_in_shopping_list:
             return Response({'success': 'False'},
                             status=status.HTTP_400_BAD_REQUEST)
-        RecipesToShopping.objects.create(user=request.user, recipe=recipe)
+        RecipeToShopping.objects.create(user=request.user, recipe=recipe)
         return Response({'success': 'True'}, status=status.HTTP_201_CREATED)
 
     def delete(self, request):
         recipe = Recipe.objects.get(id=request.data['id'])
-        is_in_shopping_card = RecipesToShopping.objects.filter(
+        is_in_shopping_card = RecipeToShopping.objects.filter(
             user=request.user,
             recipe=recipe
         ).exists()
         if is_in_shopping_card:
-            RecipesToShopping.objects.filter(user=request.user,
-                                             recipe=recipe).delete()
+            RecipeToShopping.objects.filter(user=request.user,
+                                            recipe=recipe).delete()
             return Response({'success': 'True'}, status=status.HTTP_200_OK)
         return Response({'success': 'False'},
                         status=status.HTTP_400_BAD_REQUEST)
