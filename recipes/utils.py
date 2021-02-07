@@ -16,8 +16,9 @@ def get_random_string(length):
     return result_str
 
 
-# function input parameter - user_purchases is dict
 def get_shop_list_pdf(user_purchases):
+    """Function input parameter - user_purchases is dict.
+    Return full path pdf shop list document."""
     pdf_shop_list = FPDF()
     pdf_shop_list.add_page()
 

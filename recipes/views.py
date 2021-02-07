@@ -28,8 +28,7 @@ def get_recipes(request):
             tags__name__in=tags_names
         ).distinct().order_by('title')
     else:
-        tags = Tag.objects.all()
-        tags_names = [tag.name for tag in tags]
+        tags_names = list(Tag.objects.values_list('name', flat=True))
         recipes = Recipe.objects.select_related('author', ).order_by('title')
     context['tags'] = tags_names
     context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
@@ -48,8 +47,7 @@ def get_author_recipes(request, author_id):
             tags__name__in=tags_names
         ).distinct().order_by('title')
     else:
-        tags = Tag.objects.all()
-        tags_names = [tag.name for tag in tags]
+        tags_names = list(Tag.objects.values_list('name', flat=True))
         recipes = Recipe.objects.filter(author=author).order_by('title')
     context['tags'] = tags_names
     context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
@@ -66,68 +64,55 @@ def get_followings(request):
 
 @login_required(login_url='login')
 def create_recipe(request):
-    context = {}
-    if request.method == 'POST':
-        new_recipe_form = NewRecipeForm(request.POST or None,
-                                        request.FILES or None)
-        if new_recipe_form.is_valid():
-            new_recipe = Recipe.objects.create(
-                author=request.user,
-                **new_recipe_form.cleaned_data
+    new_recipe_form = NewRecipeForm(request.POST or None,
+                                    request.FILES or None)
+    if new_recipe_form.is_valid():
+        new_recipe = Recipe.objects.create(
+            author=request.user,
+            **new_recipe_form.cleaned_data
+        )
+        for tag in get_request_tags(request.POST):
+            new_recipe.tags.add(tag)
+        for key, value in get_request_ingredients(request.POST).items():
+            RecipeIngredient.objects.create(
+                recipe=new_recipe,
+                ingredient=key,
+                amount=value
             )
-            for tag in get_request_tags(request.POST):
-                new_recipe.tags.add(tag)
-            for key, value in get_request_ingredients(request.POST).items():
-                RecipeIngredient.objects.create(
-                    recipe=new_recipe,
-                    ingredient=key,
-                    amount=value
-                )
-            return redirect(new_recipe)
-    elif request.method == 'GET':
-        context = {'form': NewRecipeForm()}
+        return redirect(new_recipe)
+    context = {'form': new_recipe_form}
     return render(request, 'recipes/new_recipe.html', context=context)
 
 
 @login_required(login_url='login')
 def edit_recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    if request.method == 'GET':
-        data = {
-            'title': recipe.title,
-            'cooking_time': recipe.cooking_time,
-            'description': recipe.description,
-            'image': recipe.image
-        }
-        recipe_form = NewRecipeForm(initial=data)
-        context = {
-            'edit_recipe': True,
-            'recipe': recipe,
-            'form': recipe_form,
-            'tags': [tag.name for tag in recipe.tags.all()],
-            'recipe_ingredients': recipe.recipe_ingredients.all()
-        }
+    recipe_form = NewRecipeForm(request.POST or None,
+                                request.FILES or None,
+                                instance=recipe)
+    if recipe_form.is_valid():
+        recipe_form.save()
+        recipe.tags.clear()
+        for tag in get_request_tags(request.POST):
+            recipe.tags.add(tag)
+        recipe.recipe_ingredients.all().delete()
+        for key, value in get_request_ingredients(request.POST).items():
+            RecipeIngredient.objects.get_or_create(
+                recipe=recipe,
+                ingredient=key,
+                amount=value
+            )
+        return redirect(recipe)
 
-        return render(request, 'recipes/new_recipe.html',
-                      context=context)
-    elif request.method == 'POST':
-        print('POST')
-        recipe_form = NewRecipeForm(request.POST or None,
-                                    request.FILES or None,
-                                    instance=recipe)
-        if recipe_form.is_valid():
-            recipe_form.save()
-            recipe.tags.clear()
-            for tag in get_request_tags(request.POST):
-                recipe.tags.add(tag)
-            recipe.recipe_ingredients.all().delete()
-            for key, value in get_request_ingredients(request.POST).items():
-                RecipeIngredient.objects.get_or_create(
-                    recipe=recipe,
-                    ingredient=key,
-                    amount=value
-                )
-    return redirect(recipe)
+    context = {
+        'edit_recipe': True,
+        'recipe': recipe,
+        'form': recipe_form,
+        'tags': list(recipe.tags.values_list('name', flat=True)),
+        'recipe_ingredients': recipe.recipe_ingredients.all()
+    }
+
+    return render(request, 'recipes/new_recipe.html', context=context)
 
 
 @login_required(login_url='login')
