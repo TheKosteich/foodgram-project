@@ -61,7 +61,7 @@ def get_request_ingredients(request_dict):
     return recipe_ingredients
 
 
-def get_request_tags(request_dict):
+def get_request_form_tags(request_dict):
     """Input parameter - request parameters dictionary.
     Function make tags list from request form parameters and return it."""
     tag_names = Tag.objects.values_list('name', flat=True)
@@ -72,7 +72,7 @@ def get_request_tags(request_dict):
     return request_tags
 
 
-def get_tagged_recipes(request, author=None):
+def get_tagged_recipes(request, author=None, favorites=None):
     """Input parameter - request parameters dictionary and author object.
     Function make tags list from request get parameters and select tagged
     recipes from db.
@@ -84,6 +84,11 @@ def get_tagged_recipes(request, author=None):
                 author=author,
                 tags__name__in=tags_names
             ).distinct().order_by('title')
+        elif favorites:
+            recipes = Recipe.objects.filter(
+                tags__name__in=tags_names,
+                id__in=favorites.values_list('recipe', flat=True)
+            ).order_by('title')
         else:
             recipes = Recipe.objects.filter(
                 tags__name__in=tags_names
@@ -92,6 +97,10 @@ def get_tagged_recipes(request, author=None):
         tags_names = list(Tag.objects.values_list('name', flat=True))
         if author:
             recipes = Recipe.objects.filter(author=author).order_by('title')
+        elif favorites:
+            recipes = Recipe.objects.filter(
+                id__in=favorites.values_list('recipe', flat=True)
+            ).order_by('title')
         else:
             recipes = Recipe.objects.select_related('author', ).order_by(
                 'title')

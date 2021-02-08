@@ -3,11 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from taggit.models import Tag
 
 from foodgram.settings import PAGE_ITEMS_COUNT
 from recipes.forms import NewRecipeForm
 from recipes.models import Recipe, RecipeIngredient
-from recipes.utils import (get_request_ingredients, get_request_tags,
+from recipes.utils import (get_request_ingredients, get_request_form_tags,
                            get_shop_list_pdf, get_tagged_recipes)
 
 User = get_user_model()
@@ -31,7 +32,7 @@ def get_recipes(request):
 def get_author_recipes(request, author_id):
     author = get_object_or_404(User, id=author_id)
     context = {'author': author}
-    context['tags'], recipes = get_tagged_recipes(request, author)
+    context['tags'], recipes = get_tagged_recipes(request, author=author)
     context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
@@ -53,7 +54,7 @@ def create_recipe(request):
             author=request.user,
             **new_recipe_form.cleaned_data
         )
-        for tag in get_request_tags(request.POST):
+        for tag in get_request_form_tags(request.POST):
             new_recipe.tags.add(tag)
         for key, value in get_request_ingredients(request.POST).items():
             RecipeIngredient.objects.create(
@@ -75,7 +76,7 @@ def edit_recipe(request, recipe_id):
     if recipe_form.is_valid():
         recipe_form.save()
         recipe.tags.clear()
-        for tag in get_request_tags(request.POST):
+        for tag in get_request_form_tags(request.POST):
             recipe.tags.add(tag)
         recipe.recipe_ingredients.all().delete()
         for key, value in get_request_ingredients(request.POST).items():
@@ -130,11 +131,11 @@ def get_pdf_shop_list(request):
 
 @login_required(login_url='login')
 def get_favorites(request):
+    context = {}
     favorites = request.user.favorites.all()
-    recipes = Recipe.objects.filter(
-        id__in=favorites.values_list('recipe', flat=True)
-    ).order_by('title')
-    context = {'paginator': Paginator(recipes, 3)}
+    context['tags'], recipes = get_tagged_recipes(request,
+                                                  favorites=favorites)
+    context['paginator'] = Paginator(recipes, 3)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/favorites.html', context=context)
