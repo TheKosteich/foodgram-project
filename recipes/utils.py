@@ -4,10 +4,10 @@ import string
 from datetime import datetime as dt
 
 from fpdf import FPDF
+from taggit.models import Tag
 
 from foodgram.settings import DOWNLOADS_DIR
 from recipes.models import Ingredient, Recipe
-from taggit.models import Tag
 
 
 def get_random_string(length):
@@ -77,7 +77,6 @@ def get_tagged_recipes(request, author=None, favorites=None):
     Function make tags list from request get parameters and select tagged
     recipes from db.
     Return tags names and tagged recipes."""
-
     if 'tags' in request.GET.keys():
         tags_names = request.GET['tags'].lower().split(',')
         if author is not None:
