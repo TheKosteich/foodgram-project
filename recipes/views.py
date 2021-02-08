@@ -3,13 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from taggit.models import Tag
 
 from foodgram.settings import PAGE_ITEMS_COUNT
 from recipes.forms import NewRecipeForm
 from recipes.models import Recipe, RecipeIngredient
 from recipes.utils import (get_request_ingredients, get_request_tags,
-                           get_shop_list_pdf)
+                           get_shop_list_pdf, get_tagged_recipes)
 
 User = get_user_model()
 
@@ -22,15 +21,7 @@ def get_recipe(request, recipe_id):
 
 def get_recipes(request):
     context = {}
-    if 'tags' in request.GET.keys():
-        tags_names = request.GET['tags'].lower().split(',')
-        recipes = Recipe.objects.filter(
-            tags__name__in=tags_names
-        ).distinct().order_by('title')
-    else:
-        tags_names = list(Tag.objects.values_list('name', flat=True))
-        recipes = Recipe.objects.select_related('author', ).order_by('title')
-    context['tags'] = tags_names
+    context['tags'], recipes = get_tagged_recipes(request)
     context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
@@ -40,16 +31,7 @@ def get_recipes(request):
 def get_author_recipes(request, author_id):
     author = get_object_or_404(User, id=author_id)
     context = {'author': author}
-    if 'tags' in request.GET.keys():
-        tags_names = request.GET['tags'].lower().split(',')
-        recipes = Recipe.objects.filter(
-            author=author,
-            tags__name__in=tags_names
-        ).distinct().order_by('title')
-    else:
-        tags_names = list(Tag.objects.values_list('name', flat=True))
-        recipes = Recipe.objects.filter(author=author).order_by('title')
-    context['tags'] = tags_names
+    context['tags'], recipes = get_tagged_recipes(request, author)
     context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
