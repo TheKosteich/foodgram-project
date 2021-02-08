@@ -99,7 +99,7 @@ class FavoritesAPIView(APIView):
             user = request.user
             is_favorite = user.favorites.filter(recipe_id=recipe.id).exists()
             if is_favorite:
-                user.favorites.get(recipe_id=recipe.id).delete()
+                get_object_or_404(Favorite, user=user, recipe=recipe).delete()
                 return Response({'success': 'True'},
                                 status=status.HTTP_200_OK)
         return Response({'success': 'False'},

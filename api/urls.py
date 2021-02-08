@@ -8,9 +8,11 @@ router_v1 = DefaultRouter()
 router_v1.register('ingredients', IngredientsViewSet, basename='ingredients')
 
 urlpatterns = [
-    path('', include(router_v1.urls)),
-    path('favorites/', FavoritesAPIView.as_view(), name='favorites'),
-    path('followings/', FollowingsAPIView.as_view(), name='followings'),
-    path('purchases/', RecipesToShoppingAPIView.as_view(),
-         name='purchases'),
+    path('v1/', include([
+        path('', include(router_v1.urls)),
+        path('favorites/', FavoritesAPIView.as_view(), name='favorites'),
+        path('followings/', FollowingsAPIView.as_view(), name='followings'),
+        path('purchases/', RecipesToShoppingAPIView.as_view(),
+             name='purchases'),
+    ])),
 ]

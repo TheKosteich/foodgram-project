@@ -29,7 +29,7 @@ def make_url(request, tag):
     if 'tags' in request.GET:
         source_tags = request.GET.get('tags').split(',')
     else:
-        source_tags = [tag.name for tag in Tag.objects.all()]
+        source_tags = list(Tag.objects.values_list('name', flat=True))
     tags = revers_tags_list(source_tags, tag)
     return ','.join(tags)
 
