@@ -77,14 +77,15 @@ def get_tagged_recipes(request, author=None, favorites=None):
     Function make tags list from request get parameters and select tagged
     recipes from db.
     Return tags names and tagged recipes."""
+
     if 'tags' in request.GET.keys():
         tags_names = request.GET['tags'].lower().split(',')
-        if author:
+        if author is not None:
             recipes = Recipe.objects.filter(
                 author=author,
                 tags__name__in=tags_names
             ).distinct().order_by('title')
-        elif favorites:
+        elif favorites is not None:
             recipes = Recipe.objects.filter(
                 tags__name__in=tags_names,
                 id__in=favorites.values_list('recipe', flat=True)
@@ -95,9 +96,9 @@ def get_tagged_recipes(request, author=None, favorites=None):
             ).distinct().order_by('title')
     else:
         tags_names = list(Tag.objects.values_list('name', flat=True))
-        if author:
+        if author is not None:
             recipes = Recipe.objects.filter(author=author).order_by('title')
-        elif favorites:
+        elif favorites is not None:
             recipes = Recipe.objects.filter(
                 id__in=favorites.values_list('recipe', flat=True)
             ).order_by('title')
