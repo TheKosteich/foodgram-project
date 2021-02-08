@@ -95,11 +95,13 @@
           {% endif %}
 
         </li>
-        <li class="single-card__item">
-          <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
-            Подписаться на автора
-          </button>
-        </li>
+        {% if request.user.is_authenticated %}
+          <li class="single-card__item">
+            <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
+              Подписаться на автора
+            </button>
+          </li>
+        {% endif %}
       </ul>
       <div class="single-card__section">
         <h3 class="single-card__section-title">Ингридиенты:</h3>
