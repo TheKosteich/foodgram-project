@@ -1,6 +1,6 @@
 from django.urls import path
-from recipes import views
 
+from recipes import views
 
 urlpatterns = [
     path('author/<int:author_id>/', views.get_author_recipes,

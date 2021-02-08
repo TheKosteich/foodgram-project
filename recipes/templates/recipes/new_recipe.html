@@ -16,8 +16,7 @@
   </div>
   <div class="form-container">
     <form class="form" method="post" enctype="multipart/form-data" action="
-      {% url 'new_recipe' as new_recipe_url %}
-      {% if request.path == new_recipe_url %}
+      {% if request.resolver_match.url_name == 'new_recipe' %}
         {% url 'new_recipe' %}
       {% else %}
         {% url 'edit_recipe' recipe.id %}
@@ -127,8 +126,7 @@
         </div>
       </div>
       <div class="form__footer">
-        {% url 'new_recipe' as new_recipe_url %}
-        {% if request.path == new_recipe_url %}
+        {% if request.resolver_match.url_name == 'new_recipe' %}
           <button class="button button_style_blue">Создать рецепт</button>
         {% else %}
           <button class="button button_style_blue">Сохранить изменения</button>

@@ -148,3 +148,6 @@ SITE_ID = 1
 REST_FRAMEWORK = {
     'SEARCH_PARAM': 'query'
 }
+
+# set paginator items count per page
+PAGE_ITEMS_COUNT = 6

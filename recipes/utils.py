@@ -6,7 +6,7 @@ from datetime import datetime as dt
 from fpdf import FPDF
 
 from foodgram.settings import DOWNLOADS_DIR
-from recipes.models import Ingredient
+from recipes.models import Ingredient, Recipe
 from taggit.models import Tag
 
 
@@ -16,8 +16,9 @@ def get_random_string(length):
     return result_str
 
 
-# function input parameter - user_purchases is dict
 def get_shop_list_pdf(user_purchases):
+    """Function input parameter - user_purchases is dict.
+    Return full path pdf shop list document."""
     pdf_shop_list = FPDF()
     pdf_shop_list.add_page()
 
@@ -40,6 +41,8 @@ def get_shop_list_pdf(user_purchases):
 
 
 def get_request_ingredients(request_dict):
+    """Input parameter - request parameters dictionary.
+    Function make recipe ingredients dictionary and return it."""
     recipe_ingredients = {}
     for key, value in request_dict.items():
         if 'nameIngredient' in key:
@@ -58,11 +61,48 @@ def get_request_ingredients(request_dict):
     return recipe_ingredients
 
 
-def get_request_tags(request_dict):
-    existing_tags = Tag.objects.all()
-    tag_names = [tag.name for tag in existing_tags]
+def get_request_form_tags(request_dict):
+    """Input parameter - request parameters dictionary.
+    Function make tags list from request form parameters and return it."""
+    tag_names = Tag.objects.values_list('name', flat=True)
     request_tags = []
     for key, value in request_dict.items():
         if key in tag_names and value == 'on':
             request_tags.append(key)
     return request_tags
+
+
+def get_tagged_recipes(request, author=None, favorites=None):
+    """Input parameter - request parameters dictionary and author object.
+    Function make tags list from request get parameters and select tagged
+    recipes from db.
+    Return tags names and tagged recipes."""
+    if 'tags' in request.GET.keys():
+        tags_names = request.GET['tags'].lower().split(',')
+        if author:
+            recipes = Recipe.objects.filter(
+                author=author,
+                tags__name__in=tags_names
+            ).distinct().order_by('title')
+        elif favorites:
+            recipes = Recipe.objects.filter(
+                tags__name__in=tags_names,
+                id__in=favorites.values_list('recipe', flat=True)
+            ).order_by('title')
+        else:
+            recipes = Recipe.objects.filter(
+                tags__name__in=tags_names
+            ).distinct().order_by('title')
+    else:
+        tags_names = list(Tag.objects.values_list('name', flat=True))
+        if author:
+            recipes = Recipe.objects.filter(author=author).order_by('title')
+        elif favorites:
+            recipes = Recipe.objects.filter(
+                id__in=favorites.values_list('recipe', flat=True)
+            ).order_by('title')
+        else:
+            recipes = Recipe.objects.select_related('author', ).order_by(
+                'title')
+
+    return tags_names, recipes

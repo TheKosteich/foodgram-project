@@ -10,3 +10,4 @@ class Command(BaseCommand):
         Tag.objects.get_or_create(name='breakfast')
         Tag.objects.get_or_create(name='lunch')
         Tag.objects.get_or_create(name='dinner')
+        print('Tags initialized successfully')

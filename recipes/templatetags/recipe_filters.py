@@ -7,10 +7,11 @@ register = template.Library()
 
 
 def revers_tags_list(tags, tag):
-    tags.append(tag) if tag not in tags else tags.remove(tag)
-    empty_item = ''
-    while empty_item in tags:
-        tags.remove('')
+    if tag not in tags:
+        tags.append(tag)
+    else:
+        tags.remove(tag)
+    tags = [tag for tag in tags if tag != '']
     return tags
 
 
@@ -25,18 +26,11 @@ def make_paragraphs(text):
 
 @register.filter
 def make_url(request, tag):
-    print(request.GET)
     if 'tags' in request.GET:
         source_tags = request.GET.get('tags').split(',')
     else:
         source_tags = [tag.name for tag in Tag.objects.all()]
-    print(source_tags)
     tags = revers_tags_list(source_tags, tag)
-    return ','.join(tags)
-
-
-@register.filter
-def list_to_string(tags):
     return ','.join(tags)
 
 
