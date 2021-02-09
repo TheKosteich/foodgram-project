@@ -2,6 +2,8 @@ version: '3.8'
 
 volumes:
   postgres_data:
+  static_folder:
+  media_folder:
 
 services:
   db:
@@ -11,12 +13,21 @@ services:
     env_file:
       - ./.env
   web:
-    build: .
+    image: kosteich/foodgram:latest
     restart: always
-    command: gunicorn api_yamdb.wsgi:application --bind 0.0.0.0:8000
-    ports:
-      - "8000:8000"
     depends_on:
       - db
+    volumes:
+      - static_folder:/code/static
+      - media_folder:/code/media
     env_file:
       - ./.env
+  nginx:
+    image: kosteich/foodgram_nginx:latest
+    depends_on:
+      - web
+    volumes:
+      - static_folder:/code/static
+      - media_folder:/code/media
+    ports:
+      - "80:80"
