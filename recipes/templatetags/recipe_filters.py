@@ -2,7 +2,6 @@ import re
 from django import template
 from taggit.models import Tag
 
-
 register = template.Library()
 
 
@@ -22,7 +21,7 @@ def make_paragraphs(text):
     for paragraph in paragraphs:
         result += f'<p class="single-card__section-text">{paragraph}</p>'
     return result
- 
+
 
 @register.filter
 def make_url(request, tag):
