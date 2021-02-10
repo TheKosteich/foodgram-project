@@ -1,18 +1,62 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+try:
+    DEBUG = False
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i%ijv0yrz6!4z4n4v1vl828ln87!lvr&^jq=e*qn%zl2u#r03#'
+    SECRET_KEY = os.environ['SECRET_KEY']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ['DB_ENGINE'],
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'PASSWORD': os.environ['DB_PASSWORD'],
+            'HOST': os.environ['DB_HOST'],
+            'PORT': os.environ['DB_PORT'],
+        }
+    }
 
-ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
+
+    STATIC_URL = os.environ['STATIC_URL']
+
+    STATIC_ROOT = os.environ['STATIC_ROOT']
+
+    EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
+    EMAIL_FILE_PATH = os.environ['EMAIL_FILE_PATH']
+
+except KeyError:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = '=b+_-j*qd^$ev7soh$xl1=g$+f0*0#h6*o)+*+h#r_eyhk-%+j'
+
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True
+
+    # Database
+    # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
+    # connect engine filebased.EmailBackend
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    # choose directory for storing emails
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+    ALLOWED_HOSTS = ['*']
+
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+    ]
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -73,16 +117,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # Connect custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -116,19 +150,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-#  connect engine filebased.EmailBackend
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# choose directory for storing emails
-EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

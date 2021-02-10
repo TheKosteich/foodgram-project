@@ -1,0 +1,33 @@
+version: '3.8'
+
+volumes:
+  postgres_data:
+  static_folder:
+  media_folder:
+
+services:
+  db:
+    image: postgres:12.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+  web:
+    image: kosteich/foodgram:latest
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - static_folder:/code/static
+      - media_folder:/code/media
+    env_file:
+      - ./.env
+  nginx:
+    image: kosteich/foodgram_nginx:latest
+    depends_on:
+      - web
+    volumes:
+      - static_folder:/code/static
+      - media_folder:/code/media
+    ports:
+      - "80:80"
