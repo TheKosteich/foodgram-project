@@ -36,7 +36,9 @@ class Recipe(models.Model):
         verbose_name='Ингредиенты рецепта'
     )
     tags = TaggableManager(verbose_name='Теги рецепта')
-    cooking_time = models.IntegerField(verbose_name='Время приготовления')
+    cooking_time = models.PositiveIntegerField(
+        verbose_name='Время приготовления'
+    )
 
     class Meta:
         verbose_name = 'Рецепт'

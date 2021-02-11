@@ -84,7 +84,7 @@
                 <div class="form__field-item-ingredient" id="ing_{{ forloop.revcounter }}">
                   <span> {{ recipe_ingredient.ingredient.title }} {{ recipe_ingredient.amount }}{{ recipe_ingredient.ingredient.dimension }}</span>
                   <span class="form__field-item-delete"></span>
-                  <input id="nameIngredient_{{ forloop.revcounter }}" name="nameIngredient_{{ forloop.revcounter }}" type="hidden" value="аргановое масло">
+                  <input id="nameIngredient_{{ forloop.revcounter }}" name="nameIngredient_{{ forloop.revcounter }}" type="hidden" value={{ recipe_ingredient.ingredient.title }}>
                   <input id="valueIngredient_{{ forloop.revcounter }}" name="valueIngredient_{{ forloop.revcounter }}" type="hidden" value="{{ recipe_ingredient.amount }}">
                   <input id="unitsIngredient_{{ forloop.revcounter }}" name="unitsIngredient_{{ forloop.revcounter }}" type="hidden" value="{{ recipe_ingredient.ingredient.dimension }}">
                 </div>
