@@ -13,7 +13,7 @@ services:
     env_file:
       - ./.env
   web:
-    image: kosteich/foodgram:latest
+    image: kosteich/foodgram_web:latest
     restart: always
     depends_on:
       - db

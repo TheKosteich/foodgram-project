@@ -48,7 +48,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: kosteich/foodgram:latest
+          tags: kosteich/foodgram_web:latest
       - name: Push foodgram_nginx image to Docker Hub
         uses: docker/build-push-action@v2
         with:
