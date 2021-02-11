@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'taggit',
     'api',
-    'debug_toolbar',
 
     'recipes'
 ]
@@ -91,7 +90,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 ]
 

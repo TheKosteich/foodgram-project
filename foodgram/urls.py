@@ -38,7 +38,3 @@ if settings.DEBUG:
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT
     )
-
-    import debug_toolbar  # noqa
-
-    urlpatterns += (path("__debug__/", include(debug_toolbar.urls)),)
