@@ -63,6 +63,7 @@ def add_class(field, css_class):
 
 
 @register.filter
-def is_follower(user):
-    followings = user.followings.values_list('following__username', flat=True)
-    return user.username in followings
+def is_follower(user, author):
+    if user.followings.filter(following=author).exists():
+        return True
+    return False
