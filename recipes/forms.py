@@ -1,6 +1,6 @@
 from django import forms
 
-from recipes.models import Recipe, Ingredient
+from recipes.models import Recipe
 from recipes.utils import get_request_ingredients
 
 
@@ -32,4 +32,3 @@ class NewRecipeForm(forms.ModelForm):
                 code='ingredients'
             )
         return cleaned_data
-
