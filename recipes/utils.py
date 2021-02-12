@@ -1,12 +1,8 @@
-import os
 import random
 import string
-from datetime import datetime as dt
 
-from fpdf import FPDF
 from taggit.models import Tag
 
-from foodgram.settings import DOWNLOADS_DIR
 from recipes.models import Ingredient, Recipe
 
 
@@ -14,30 +10,6 @@ def get_random_string(length):
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
-
-
-def get_shop_list_pdf(user_purchases):
-    """Function input parameter - user_purchases is dict.
-    Return full path pdf shop list document."""
-    pdf_shop_list = FPDF()
-    pdf_shop_list.add_page()
-
-    font_path = os.path.join(
-        os.getcwd(),
-        'recipes/static/recipes/fonts/DejaVuSansCondensed.ttf'
-    )
-    pdf_shop_list.add_font(family='DejaVu', fname=font_path, uni=True)
-    pdf_shop_list.set_font(family='DejaVu', size=14)
-
-    for purchase, amount in user_purchases.items():
-        pdf_shop_list.cell(0, 10, f'( ) {purchase} - {amount}', 0, 1)
-
-    date, random_string = dt.now().date(), get_random_string(8)
-    shop_list_name = f'{date}_shop-list_{random_string}.pdf'
-    shop_list_full_path = os.path.join(DOWNLOADS_DIR, shop_list_name)
-    pdf_shop_list.output(name=shop_list_full_path)
-
-    return shop_list_full_path
 
 
 def get_request_ingredients(request_dict):

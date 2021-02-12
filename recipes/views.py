@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import FileResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from foodgram.settings import PAGE_ITEMS_COUNT
 from recipes.forms import NewRecipeForm
-from recipes.models import Recipe, RecipeIngredient
+from recipes.models import Recipe, RecipeIngredient, Ingredient
 from recipes.utils import (get_request_ingredients, get_request_form_tags,
-                           get_shop_list_pdf, get_tagged_recipes)
+                           get_tagged_recipes)
 
 User = get_user_model()
 
@@ -121,11 +121,17 @@ def get_pdf_shop_list(request):
             else:
                 user_purchases[ingredient_title] = ingredient_amount
 
-    pdf_shop_list_path = get_shop_list_pdf(user_purchases)
+    content = ''
 
-    pdf_shop_list = open(pdf_shop_list_path, 'rb')
+    for purchase, amount in user_purchases.items():
+        dimension = Ingredient.objects.get(title=purchase).dimension
+        content += f'( ) {purchase} - {amount} {dimension}\n'
 
-    return FileResponse(pdf_shop_list)
+    filename = 'shop_list.txt'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+
+    return response
 
 
 @login_required(login_url='login')
