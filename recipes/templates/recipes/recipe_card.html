@@ -97,9 +97,15 @@
         </li>
         {% if request.user.is_authenticated %}
           <li class="single-card__item">
-            <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
-              Подписаться на автора
-            </button>
+            {% if request.user|is_follower %}
+              <button class="button button_style_light-blue button_size_subscribe" name="subscribe">
+                Отписаться от автора
+              </button>
+            {% else %}
+              <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>
+                Подписаться на автора
+              </button>
+            {% endif %}
           </li>
         {% endif %}
       </ul>

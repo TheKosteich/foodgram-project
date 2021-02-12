@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load recipe_filters %}
 
-{% block title %} Избранное {% endblock %}
+{% block title %} Рецепты {% endblock %}
 
 {% block content %}
   {% csrf_token %}
@@ -16,7 +17,7 @@
   {% if author %}
     <div class="author-subscribe" data-author={{ author.id }}>
       <p style="padding: 0 0 2em 0;">
-        {% if author in request.user.followings %}
+        {% if request.user|is_follower %}
           <button class="button button_style_light-blue button_size_subscribe" name="subscribe">
             Отписаться от автора
           </button>

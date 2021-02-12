@@ -60,3 +60,9 @@ def is_in_shopping_list(user, recipe):
 @register.filter
 def add_class(field, css_class):
     return field.as_widget(attrs={'class': css_class})
+
+
+@register.filter
+def is_follower(user):
+    followings = user.followings.values_list('following__username', flat=True)
+    return user.username in followings
