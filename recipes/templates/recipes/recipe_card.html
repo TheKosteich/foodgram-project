@@ -97,7 +97,7 @@
         </li>
         {% if request.user.is_authenticated %}
           <li class="single-card__item">
-            {% if request.user|is_follower %}
+            {% if request.user|is_follower:recipe.author %}
               <button class="button button_style_light-blue button_size_subscribe" name="subscribe">
                 Отписаться от автора
               </button>
