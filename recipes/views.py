@@ -140,7 +140,7 @@ def get_favorites(request):
     favorites = request.user.favorites.all()
     context['tags'], recipes = get_tagged_recipes(request,
                                                   favorites=favorites)
-    context['paginator'] = Paginator(recipes, 3)
+    context['paginator'] = Paginator(recipes, PAGE_ITEMS_COUNT)
     page_number = request.GET.get('page')
     context['page'] = context['paginator'].get_page(page_number)
     return render(request, 'recipes/favorites.html', context=context)

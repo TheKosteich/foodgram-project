@@ -14,7 +14,7 @@
 
   </div>
 
-  {% if author %}
+  {% if author and request.user.is_authenticated %}
     <div class="author-subscribe" data-author={{ author.id }}>
       <p style="padding: 0 0 2em 0;">
         {% if request.user|is_follower %}

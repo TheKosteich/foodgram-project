@@ -60,7 +60,7 @@ def get_tagged_recipes(request, author=None, favorites=None):
             recipes = Recipe.objects.filter(
                 tags__name__in=tags_names,
                 id__in=favorites.values_list('recipe', flat=True)
-            ).order_by('title')
+            ).distinct().order_by('title')
         else:
             recipes = Recipe.objects.filter(
                 tags__name__in=tags_names
